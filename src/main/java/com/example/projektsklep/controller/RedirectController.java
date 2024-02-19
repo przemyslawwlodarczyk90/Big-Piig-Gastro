@@ -3,11 +3,14 @@ package com.example.projektsklep.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
+
+@Controller // Oznacza, że ta klasa jest kontrolerem w Spring MVC, obsługującym żądania HTTP.
 public class RedirectController {
 
-    @GetMapping("/")
+    @GetMapping("/") // Mapuje żądanie HTTP GET dla głównego ścieżki aplikacji ("/") na tę metodę.
     public String redirect() {
+        // Przekierowuje użytkownika na stronę główną aplikacji ("/home").
+        // Używane, gdy użytkownik odwiedza główny URL aplikacji, aby automatycznie przekierować go na konkretną stronę.
         return "redirect:/home";
     }
 }

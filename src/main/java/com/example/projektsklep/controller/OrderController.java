@@ -1,20 +1,14 @@
 package com.example.projektsklep.controller;
 
 
-
 import com.example.projektsklep.exception.OrderNotFoundException;
-import com.example.projektsklep.exception.OrderRetrievalException;
-import com.example.projektsklep.exception.OrderUpdateException;
 import com.example.projektsklep.model.dto.AddressDTO;
 import com.example.projektsklep.model.dto.OrderDTO;
 import com.example.projektsklep.model.dto.UserDTO;
-import com.example.projektsklep.model.enums.OrderStatus;
 import com.example.projektsklep.service.BasketService;
 import com.example.projektsklep.service.OrderService;
 import com.example.projektsklep.service.UserService;
-import com.example.projektsklep.utils.AddressDTOInitializer;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -29,65 +23,66 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrderController {
 
+    // Wstrzykiwanie zależności przez konstruktor dla serwisów używanych w kontrolerze.
     private final OrderService orderService;
     private final BasketService basketService;
-
     private final UserService userService;
 
-
+    // Konstruktor do wstrzykiwania serwisów.
     public OrderController(OrderService orderService, BasketService basketService, UserService userService) {
         this.orderService = orderService;
         this.basketService = basketService;
         this.userService = userService;
     }
 
+    // Wyświetla listę zamówień z paginacją.
     @GetMapping
     public String listOrders(Model model,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Map<String, Object> response = orderService.findAllOrdersWithPagination(pageable);
+        Pageable pageable = PageRequest.of(page, size); // Tworzenie obiektu Pageable do paginacji.
+        Map<String, Object> response = orderService.findAllOrdersWithPagination(pageable); // Pobieranie zamówień z paginacją.
 
-        model.addAllAttributes(response);
+        model.addAllAttributes(response); // Dodanie odpowiedzi do modelu.
 
-        return "order_list";
+        return "order_list"; // Zwraca nazwę widoku z listą zamówień.
     }
 
-    @ExceptionHandler(OrderNotFoundException.class)
+    // Szczegóły zamówienia; obsługuje wyjątek, gdy zamówienie nie zostanie znalezione.
+    @ExceptionHandler(OrderNotFoundException.class) // Obsługuje wyjątek, gdy zamówienie nie zostanie znalezione.
     @GetMapping("/{orderId}")
     public String orderDetails(@PathVariable Long orderId, Model model) {
         try {
-            OrderDTO orderDTO = orderService.findOrderDTOById(orderId);
-            model.addAttribute("order", orderDTO);
-            return "order_details";
+            OrderDTO orderDTO = orderService.findOrderDTOById(orderId); // Pobieranie DTO zamówienia.
+            model.addAttribute("order", orderDTO); // Dodanie zamówienia do modelu.
+            return "order_details"; // Zwraca nazwę widoku ze szczegółami zamówienia.
         } catch (OrderNotFoundException e) {
-            model.addAttribute("error", "Zamówienie nie znalezione");
-            return "error";
+            model.addAttribute("error", "Zamówienie nie znalezione"); // Dodanie wiadomości błędu do modelu.
+            return "error"; // Zwraca nazwę widoku błędu.
         }
     }
 
-
+    // Tworzy zamówienie na podstawie zawartości koszyka.
     @PostMapping("/create")
     public String createOrderFromBasket(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // Pobranie aktualnego uwierzytelnienia.
+        String username = authentication.getName(); // Pobranie nazwy użytkownika z uwierzytelnienia.
 
-        UserDTO userDTO = userService.findUserByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        UserDTO userDTO = userService.findUserByEmail(username).orElseThrow(() -> new RuntimeException("User not found")); // Pobranie DTO użytkownika.
 
-        boolean useDifferentAddress = "on".equals(request.getParameter("differentAddress"));
+        boolean useDifferentAddress = "on".equals(request.getParameter("differentAddress")); // Sprawdzenie, czy użyto innego adresu.
         AddressDTO newShippingAddress = useDifferentAddress ? new AddressDTO(
                 null,
                 request.getParameter("street"),
                 request.getParameter("city"),
                 request.getParameter("postalCode"),
-                request.getParameter("country")) : null;
+                request.getParameter("country")) : null; // Utworzenie nowego adresu wysyłki, jeśli wymagane.
 
-        String redirectUrl = basketService.finalizeOrderAndRedirect(userDTO.id(), newShippingAddress, useDifferentAddress);
+        String redirectUrl = basketService.finalizeOrderAndRedirect(userDTO.id(), newShippingAddress, useDifferentAddress); // Finalizacja zamówienia i przekierowanie.
 
-        redirectAttributes.addFlashAttribute("success", "Zamówienie zostało złożone.");
-        return redirectUrl;
+        redirectAttributes.addFlashAttribute("success", "Zamówienie zostało złożone."); // Dodanie wiadomości sukcesu.
+        return redirectUrl; // Przekierowanie do URL.
     }
-
 
 }
 

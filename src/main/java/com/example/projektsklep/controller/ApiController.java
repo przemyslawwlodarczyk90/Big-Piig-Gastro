@@ -28,6 +28,7 @@ public class ApiController {
     private final ProducerService authorService;
     private final WeatherService weatherService;
 
+    // Konstruktor wstrzykujący zależności do serwisów.
     public ApiController(ProductService productService, CategoryService categoryService, ProducerService authorService, WeatherService weatherService) {
         this.productService = productService;
         this.categoryService = categoryService;
@@ -35,6 +36,7 @@ public class ApiController {
         this.weatherService = weatherService;
     }
 
+    // Metoda obsługująca wyświetlanie listy produktów.
     @GetMapping("/productList")
     public String listProducts(
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
@@ -44,20 +46,23 @@ public class ApiController {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<ProductDTO> productsPage = productService.findAllProductDTOs(pageable);
 
+        // Dodaje atrybuty do modelu, aby móc je wyświetlić w widoku.
         model.addAttribute("productsPage", productsPage);
         model.addAttribute("pageSize", pageSize);
 
-
-        return "products_list";
+        return "products_list"; // Zwraca nazwę widoku listy produktów.
     }
 
+    // Metoda wyświetlająca formularz wyszukiwania produktów.
     @GetMapping("/searchProduct/form")
     public String showSearchForm(Model model) {
+        // Przygotowuje dane do formularza wyszukiwania.
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("authors", authorService.findAll());
-        return "product_search_form";
+        return "product_search_form"; // Zwraca nazwę widoku formularza wyszukiwania.
     }
 
+    // Metoda obsługująca wyszukiwanie produktów.
     @GetMapping("/searchProduct")
     public String searchProducts(
             @RequestParam(required = false) String title,
@@ -70,43 +75,47 @@ public class ApiController {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductDTO> products = productService.searchProducts(title, categoryId, authorId, pageable);
 
+        // Dodaje atrybuty do modelu, aby móc je wyświetlić w wynikach wyszukiwania.
         model.addAttribute("productsPage", products);
         model.addAttribute("selectedPageSize", size);
         model.addAttribute("title", title);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("authorId", authorId);
 
-        return "product_search_results";
+        return "product_search_results"; // Zwraca nazwę widoku wyników wyszukiwania.
     }
 
+    // Metoda obsługująca wyjątek nieznalezionego produktu.
     @ExceptionHandler(ProductNotFoundException.class)
     public String handleProductNotFound(Model model) {
         model.addAttribute("error", "Produkt nie znaleziony");
-        return "product_not_found"; // Nazwa widoku błędu
+        return "product_not_found"; // Zwraca nazwę widoku błędu.
     }
 
+    // Metoda wyświetlająca szczegóły produktu.
     @GetMapping("/productDetails")
     public String productDetails(@RequestParam("productId") Long productId, Model model) {
         ProductDTO productDTO = productService.findProductDTOById(productId);
         model.addAttribute("product", productDTO);
-        return "product_details";
+        return "product_details"; // Zwraca nazwę widoku szczegółów produktu.
     }
 
+    // Metoda wyświetlająca drzewo kategorii.
     @GetMapping("/categoryTree")
     public String categoryTree() {
-        return "categories_tree"; // Zwraca userPanel.html
+        return "categories_tree"; // Zwraca nazwę widoku drzewa kategorii.
     }
 
-
+    // Metoda obsługująca wyświetlanie danych pogodowych.
     @GetMapping("/weather")
     public String getWeather(@RequestParam(name = "city", required = false) String city, Model model, Principal principal) {
         Optional<String> weatherData = weatherService.getWeatherData(city, principal);
         if (weatherData.isPresent()) {
             model.addAttribute("weatherData", weatherData.get());
-            return "weather";
+            return "weather"; // Zwraca nazwę widoku pogody.
         } else {
             model.addAttribute("error", "Nie można znaleźć danych o pogodzie.");
-            return "weather";
+            return "weather"; // Zwraca nazwę widoku pogody z komunikatem o błędzie.
         }
     }
 }
