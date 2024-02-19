@@ -1,3 +1,5 @@
+package com.example.projektsklep.model.entities.order;
+
 import com.example.projektsklep.model.entities.order.Order;
 import com.example.projektsklep.model.entities.user.User;
 import com.example.projektsklep.model.enums.OrderStatus;
