@@ -25,68 +25,79 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-  private final OrderRepository orderRepository;
-  private final UserRepository userRepository;
+  private final OrderRepository orderRepository; // Repozytorium dla operacji na zamówieniach.
+  private final UserRepository userRepository; // Repozytorium dla operacji na użytkownikach.
 
+  // Konstruktor z wstrzykniętymi zależnościami repozytoriów.
   public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
     this.orderRepository = orderRepository;
     this.userRepository = userRepository;
   }
 
+  // Metoda zwracająca wszystkie zamówienia w formie stronicowanej.
   public Page<OrderDTO> findAllOrders(Pageable pageable) {
     return orderRepository.findAll(pageable)
-            .map(this::convertToOrderDTO);
+            .map(this::convertToOrderDTO); // Konwersja zamówień na DTO.
   }
 
+  // Wyszukiwanie DTO zamówienia po jego ID.
   public OrderDTO findOrderDTOById(Long id) {
     return orderRepository.findById(id)
-            .map(this::convertToOrderDTO)
-            .orElse(null);
+            .map(this::convertToOrderDTO) // Konwersja znalezionego zamówienia na DTO.
+            .orElse(null); // Zwrócenie null, jeśli zamówienie nie zostało znalezione.
   }
 
+  // Zapis nowego zamówienia z DTO.
   public OrderDTO saveOrderDTO(OrderDTO orderDTO) {
-    Order order = convertToOrder(orderDTO);
+    Order order = convertToOrder(orderDTO); // Konwersja DTO na encję.
+
+    // Przypisanie użytkownika do zamówienia, jeśli podano userId.
     if (orderDTO.userId() != null) {
       User user = userRepository.findById(orderDTO.userId())
-              .orElseThrow(() -> new RuntimeException("User not found"));
+              .orElseThrow(() -> new RuntimeException("User not found")); // Rzucenie wyjątku, jeśli użytkownik nie istnieje.
       order.setAccountHolder(user);
     }
 
-    if (orderDTO.shippingAddress() != null) {
-    }
+    // Przetwarzanie adresu wysyłkowego nie zostało zaimplementowane.
 
-    order = orderRepository.save(order);
-    return convertToOrderDTO(order);
+    order = orderRepository.save(order); // Zapis zamówienia w bazie danych.
+    return convertToOrderDTO(order); // Zwrócenie zapisanego zamówienia jako DTO.
   }
 
+  // Pobranie wszystkich zamówień danego użytkownika.
   public List<OrderDTO> findAllOrdersByUserId(long userId) {
     return orderRepository.findByAccountHolder_Id(userId).stream()
-            .map(this::convertToOrderDTO)
-            .collect(Collectors.toList());
+            .map(this::convertToOrderDTO) // Konwersja każdego zamówienia na DTO.
+            .collect(Collectors.toList()); // Zbieranie wyników do listy.
   }
 
+  // Aktualizacja zamówienia na podstawie DTO.
   public boolean updateOrderDTO(Long id, OrderDTO orderDTO) {
     Order existingOrder = orderRepository.findById(id)
-            .orElseThrow(() -> new OrderUpdateException("Order not found"));
-    updateOrderData(existingOrder, orderDTO);
-    existingOrder = orderRepository.save(existingOrder);
-    return existingOrder != null;
+            .orElseThrow(() -> new OrderUpdateException("Order not found")); // Wyjątek, jeśli nie znaleziono zamówienia.
+    updateOrderData(existingOrder, orderDTO); // Aktualizacja danych zamówienia.
+    existingOrder = orderRepository.save(existingOrder); // Zapis zmienionego zamówienia.
+    return existingOrder != null; // Sprawdzenie, czy zapis się powiódł.
   }
 
+  // Wyszukanie wszystkich zamówień o określonym statusie.
   public List<OrderDTO> findAllOrdersByStatus(OrderStatus orderStatus) {
     return orderRepository.findAllByOrderStatus(orderStatus).stream()
-            .map(this::convertToOrderDTO)
-            .collect(Collectors.toList());
+            .map(this::convertToOrderDTO) // Konwersja zamówień na DTO.
+            .collect(Collectors.toList()); // Zbieranie wyników do listy.
   }
 
+  // Wyszukiwanie zamówień dla użytkownika o podanym adresie email.
   public List<OrderDTO> findOrdersForUserEmail(String email) {
     User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotFoundException("Użytkownik o podanym adresie e-mail nie istnieje."));
-
-    return findAllOrdersByUserId(user.getId());
+            .orElseThrow(() -> new UserNotFoundException("Użytkownik o podanym adresie e-mail nie istnieje.")); // Wyjątek, jeśli użytkownik nie istnieje.
+    return findAllOrdersByUserId(user.getId()); // Zwrócenie zamówień danego użytkownika.
   }
 
+  // Konwersja encji Order na DTO.
   private OrderDTO convertToOrderDTO(Order order) {
+    // Deklaracja i przypisanie wartości do zmiennej statusName.
+    // Zakładamy, że status zamówienia może być null, więc używamy operatora "?:" do obsługi tego przypadku.
     String statusName = (order.getOrderStatus() != null) ? order.getOrderStatus().name() : "UNDEFINED";
 
     List<LineOfOrderDTO> lineOfOrdersDTO = Optional.ofNullable(order.getLineOfOrders())
@@ -108,9 +119,10 @@ public class OrderService {
                     address.getCountry()))
             .orElse(null);
 
+    // Użycie zmiennej statusName podczas tworzenia nowego obiektu OrderDTO.
     return new OrderDTO(
             order.getId(),
-            order.getAccountHolder().getId(),
+            order.getAccountHolder() != null ? order.getAccountHolder().getId() : null, // Bezpieczne odwołanie do getAccountHolder().
             statusName,
             order.getDateCreated(),
             order.getSentAt(),
@@ -118,51 +130,60 @@ public class OrderService {
             lineOfOrdersDTO,
             shippingAddressDTO);
   }
-
+  // Aktualizacja statusu zamówienia.
   public boolean updateOrderStatus(Long id, String orderStatus) {
     Order existingOrder = orderRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Order not found"));
-    existingOrder.setOrderStatus(OrderStatus.valueOf(orderStatus.toUpperCase()));
-    existingOrder = orderRepository.save(existingOrder);
-    return existingOrder != null;
+            .orElseThrow(() -> new RuntimeException("Order not found")); // Wyjątek, jeśli zamówienie nie istnieje.
+    existingOrder.setOrderStatus(OrderStatus.valueOf(orderStatus.toUpperCase())); // Ustawienie nowego statusu zamówienia.
+    existingOrder = orderRepository.save(existingOrder); // Zapis zmienionego zamówienia.
+    return existingOrder != null; // Sprawdzenie, czy zapis się powiódł.
   }
+
+  // Konwersja z OrderDTO do encji Order. Aktualnie metoda jest pusta i wymaga implementacji.
   private Order convertToOrder(OrderDTO orderDTO) {
     Order order = new Order();
+    // Tutaj powinna znaleźć się logika konwersji.
     return order;
   }
 
-
+  // Aktualizacja danych zamówienia. Metoda jest pusta i wymaga implementacji.
   private void updateOrderData(Order order, OrderDTO orderDTO) {
+    // Tutaj powinna znaleźć się logika aktualizacji danych zamówienia.
   }
 
-
+  // Konwersja z AddressDTO do encji Address. Metoda jest pusta i wymaga implementacji.
   private Address convertToAddress(AddressDTO addressDTO) {
     Address address = new Address();
+    // Tutaj powinna znaleźć się logika konwersji.
     return address;
   }
 
+  // Tworzenie OrderDTO na podstawie danych wejściowych.
   public OrderDTO createOrderDTO(Long userId, String orderStatus, List<LineOfOrderDTO> lineOfOrders, AddressDTO shippingAddress) {
-    LocalDate now = LocalDate.now();
-    BigDecimal totalPrice = calculateTotalPrice(lineOfOrders);
+    LocalDate now = LocalDate.now(); // Pobranie aktualnej daty.
+    BigDecimal totalPrice = calculateTotalPrice(lineOfOrders); // Obliczenie całkowitej ceny zamówienia.
 
+    // Zwrócenie nowo utworzonego DTO zamówienia.
     return new OrderDTO(null, userId, orderStatus, now, null, totalPrice, lineOfOrders, shippingAddress);
   }
 
+  // Obliczanie całkowitej ceny zamówienia na podstawie linii zamówień.
   private BigDecimal calculateTotalPrice(List<LineOfOrderDTO> lineOfOrders) {
+    // Aktualnie metoda zwraca 0 i wymaga implementacji.
     return BigDecimal.ZERO;
   }
 
-
+  // Metoda zwracająca dane do paginacji oraz listę zamówień jako DTO.
   public Map<String, Object> findAllOrdersWithPagination(Pageable pageable) {
     Page<OrderDTO> orderPage = orderRepository.findAll(pageable)
-            .map(this::convertToOrderDTO);
+            .map(this::convertToOrderDTO); // Konwersja zamówień na DTO dla stronicowania.
 
+    // Przygotowanie i zwrócenie mapy z danymi do paginacji.
     Map<String, Object> response = new HashMap<>();
     response.put("orderPage", orderPage);
     response.put("currentPage", orderPage.getNumber());
     response.put("totalItems", orderPage.getTotalElements());
     response.put("totalPages", orderPage.getTotalPages());
-
     response.put("hasPrevious", orderPage.hasPrevious());
     response.put("hasNext", orderPage.hasNext());
     response.put("firstPage", 0);
@@ -173,21 +194,23 @@ public class OrderService {
     return response;
   }
 
+  // Przygotowanie modelu dla formularza edycji zamówienia.
   public Model prepareEditOrderFormModel(Long orderId, Model model) throws OrderNotFoundException {
-    OrderDTO orderDTO = findOrderDTOById(orderId);
-    model.addAttribute("order", orderDTO);
-    model.addAttribute("statuses", OrderStatus.values());
-    return model;
+    OrderDTO orderDTO = findOrderDTOById(orderId); // Wyszukanie DTO zamówienia.
+    model.addAttribute("order", orderDTO); // Dodanie zamówienia do modelu.
+    model.addAttribute("statuses", OrderStatus.values()); // Dodanie dostępnych statusów zamówienia do modelu.
+    return model; // Zwrócenie modelu.
   }
 
+  // Przygotowanie modelu dla listy zamówień według statusu.
   public void prepareOrdersByStatusModel(OrderStatus orderStatus, Model model) {
     if (orderStatus == null) {
-      orderStatus = OrderStatus.NEW_ORDER;
+      orderStatus = OrderStatus.NEW_ORDER; // Ustawienie domyślnego statusu, jeśli nie podano.
     }
 
-    List<OrderDTO> orders = findAllOrdersByStatus(orderStatus);
-    model.addAttribute("orders", orders);
-    model.addAttribute("selectedStatus", orderStatus.name());
+    List<OrderDTO> orders = findAllOrdersByStatus(orderStatus); // Pobranie zamówień o podanym statusie.
+    model.addAttribute("orders", orders); // Dodanie listy zamówień do modelu.
+    model.addAttribute("selectedStatus", orderStatus.name()); // Dodanie wybranego statusu do modelu.
   }
 
 }

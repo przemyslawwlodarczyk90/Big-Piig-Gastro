@@ -15,23 +15,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
+    // Metoda do dodawania nowej kategorii w bazie danych.
     public Category addCategory(Category category) {
         return categoryRepository.save(category);
     }
 
+    // Metoda do dodawania nowej kategorii wraz z przypisaniem kategorii nadrzędnej.
     public CategoryDTO addCategoryWithParent(CategoryDTO categoryDTO) {
         Category category = new Category();
         category.setName(categoryDTO.name());
 
+        // Przypisanie kategorii nadrzędnej, jeśli została podana.
         if (categoryDTO.parentCategoryId() != null) {
             Category parentCategory = categoryRepository.findById(categoryDTO.parentCategoryId())
                     .orElseThrow(() -> new RuntimeException("Parent category not found"));
@@ -42,21 +48,26 @@ public class CategoryService {
         return convertToCategoryDTO(savedCategory);
     }
 
+    // Pobieranie wszystkich kategorii jako DTO.
     public List<CategoryDTO> getAllCategoryDTOs() {
         return categoryRepository.findAll().stream()
                 .map(this::convertToCategoryDTO)
                 .collect(Collectors.toList());
     }
 
+    // Pobieranie pojedynczej kategorii po ID jako DTO.
     public CategoryDTO getCategoryDTOById(Long id) {
         return categoryRepository.findById(id)
                 .map(this::convertToCategoryDTO)
                 .orElse(null);
     }
+
+    // Pobieranie wszystkich kategorii z bazy danych.
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
 
+    // Aktualizacja danych kategorii.
     public CategoryDTO updateCategoryDTO(Long id, CategoryDTO updatedCategoryDTO) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -64,12 +75,13 @@ public class CategoryService {
         return convertToCategoryDTO(categoryRepository.save(category));
     }
 
+    // Generowanie drzewa kategorii.
     public List<CategoryTree> getCategoriesTree() {
         List<Category> categories = categoryRepository.findAll();
         Map<Long, CategoryTree> categoryTreesMap = new HashMap<>();
 
+        // Inicjalizacja węzłów drzewa.
         for (Category category : categories) {
-            CategoryTreeDTO categoryTreeDTO = new CategoryTreeDTO(category);
             CategoryTree categoryTree = new CategoryTree();
             categoryTree.setId(category.getId());
             categoryTree.setName(category.getName());
@@ -79,6 +91,7 @@ public class CategoryService {
             categoryTreesMap.put(category.getId(), categoryTree);
         }
 
+        // Budowanie struktury drzewa.
         for (Category category : categories) {
             if (category.getParent() != null) {
                 CategoryTree parentCategoryTree = categoryTreesMap.get(category.getParent().getId());
@@ -89,6 +102,7 @@ public class CategoryService {
         return new ArrayList<>(categoryTreesMap.values());
     }
 
+    // Zapis lub aktualizacja kategorii.
     public CategoryDTO saveOrUpdateCategory(CategoryDTO categoryDTO) {
         Category category = new Category();
         category.setName(categoryDTO.name());
@@ -100,11 +114,13 @@ public class CategoryService {
         return convertToCategoryDTO(savedCategory);
     }
 
+    // Usuwanie kategorii po ID z bazy danych.
     @Transactional
     public void deleteCategoryById(Long id) {
         categoryRepository.deleteById(id);
     }
 
+    // Konwersja encji kategorii na DTO.
     private CategoryDTO convertToCategoryDTO(Category category) {
         String parentCategoryName = category.getParentCategory() != null ? category.getParentCategory().getName() : null;
         return new CategoryDTO(
@@ -114,11 +130,14 @@ public class CategoryService {
                 parentCategoryName
         );
     }
+
+    // Aktualizacja danych kategorii na podstawie DTO.
     private void updateCategoryData(Category category, CategoryDTO categoryDTO) {
         category.setName(categoryDTO.name());
-        // Ustaw parentCategory, jeśli jest wymagane
+        // Tutaj można dodać logikę aktualizacji kategorii nadrzędnej, jeśli jest wymagane.
     }
 
+    // Pobieranie kategorii z nazwą kategorii nadrzędnej.
     public List<CategoryDTO> getCategoriesWithParentName() {
         List<CategoryDTO> categories = getAllCategoryDTOs().stream().map(category -> {
             String parentCategoryName = category.parentCategoryId() != null
@@ -129,6 +148,7 @@ public class CategoryService {
         return categories;
     }
 
+    // Przygotowanie modelu dla formularza dodawania kategorii.
     public Model prepareAddCategoryModel(Model model) {
         if (!model.containsAttribute("categoryDTO")) {
             model.addAttribute("categoryDTO", new CategoryDTO(null, "", null, null));
