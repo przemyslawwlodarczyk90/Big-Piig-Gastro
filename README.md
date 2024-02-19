@@ -1,6 +1,6 @@
 # Big Piig Gastro
 
-Big Piig Gastro to sklep internetowy zaprojektowany specjalnie dla branży HoReCa, oferujący szeroki asortyment produktów gastronomicznych. Platforma umożliwia zarządzanie produktami, kategoriami, zamówieniami oraz dostęp do danych pogodowych, co stanowi unikalną funkcjonalność wśród sklepów internetowych.
+Big Piig Gastro to sklep internetowy zaprojektowany specjalnie dla branży HoReCa.  Platforma umożliwia zarządzanie produktami, kategoriami, zamówieniami oraz dostęp do danych pogodowych.
 
 ## Główne funkcje
 
@@ -40,7 +40,7 @@ Te testy gwarantują, że wszystkie kluczowe funkcje systemu działają zgodnie 
 
 ### Krok po kroku
 
-1. Sklonuj repozytorium z GitHub: [Big Piig Gastro](https://github.com/przemyslawwlodarczyk90/Big-Piig-Gastro)
+1. Sklonuj repozytorium z GitHub.
 2. Skonfiguruj dostęp do bazy danych w `application.properties`.
 3. Zbuduj aplikację komendą `mvn clean install`.
 4. Uruchom aplikację przy pomocy `mvn spring-boot:run`.
