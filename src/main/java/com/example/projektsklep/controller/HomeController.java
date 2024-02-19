@@ -18,10 +18,7 @@ public class HomeController {
 
     private final UserService userService;
 
-    /**
-     * Konstruktor klasy HomeController.
-     * @param userService Serwis zarządzający użytkownikami, wstrzyknięty przez Springa.
-     */
+
     public HomeController(UserService userService) {
         this.userService = userService;
     }

@@ -28,7 +28,7 @@ public class ApiController {
     private final ProducerService authorService;
     private final WeatherService weatherService;
 
-    // Konstruktor wstrzykujący zależności do serwisów.
+
     public ApiController(ProductService productService, CategoryService categoryService, ProducerService authorService, WeatherService weatherService) {
         this.productService = productService;
         this.categoryService = categoryService;

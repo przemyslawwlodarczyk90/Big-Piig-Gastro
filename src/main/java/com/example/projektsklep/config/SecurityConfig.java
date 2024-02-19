@@ -13,17 +13,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/**
+ * Klasa konfiguracyjna do ustawień bezpieczeństwa aplikacji.
+ */
 @Configuration
 public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * Definiuje bean PasswordEncoder, który dostarcza mechanizm do kodowania i weryfikacji haseł.
+     *
+     * @return instancja BCryptPasswordEncoder.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Konfiguruje dostawcę uwierzytelniania za pomocą DaoAuthenticationProvider, który korzysta z UserDetailsService
+     * do pobierania informacji o użytkownikach oraz PasswordEncoder do kodowania haseł.
+     *
+     * @return skonfigurowany bean AuthenticationProvider.
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -32,6 +46,14 @@ public class SecurityConfig {
         return authenticationProvider;
     }
 
+    /**
+     * Definiuje główny łańcuch filtrów bezpieczeństwa aplikacji. Określa zasady dostępu do różnych części aplikacji,
+     * konfigurację logowania i wylogowywania, oraz dodatkowe ustawienia bezpieczeństwa jak CSRF i CORS.
+     *
+     * @param http obiekt HttpSecurity do konfiguracji zabezpieczeń.
+     * @return skonfigurowany łańcuch filtrów bezpieczeństwa.
+     * @throws Exception w przypadku błędów konfiguracji.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -49,22 +71,19 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/users/new")).permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
-                        .loginPage("/user/login") // Wskazuje na Twoją stronę logowania
-                        .loginProcessingUrl("/user/login") // Endpoint do przetwarzania logowania
-                        .defaultSuccessUrl("/home", true) // Przekierowuje po udanym logowaniu
+                        .loginPage("/user/login")
+                        .loginProcessingUrl("/user/login")
+                        .defaultSuccessUrl("/home", true)
                         .permitAll())
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/home") // Przekierowuje po udanym wylogowaniu
+                        .logoutSuccessUrl("/home")
                         .permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
-
         return http.build();
     }
-
-
 }

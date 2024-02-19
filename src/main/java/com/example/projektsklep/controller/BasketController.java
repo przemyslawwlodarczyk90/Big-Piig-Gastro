@@ -13,10 +13,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/basket")
 public class BasketController {
 
-    private final BasketService basketService; // Serwis zarządzający koszykiem zakupowym.
-    private final ProductService productService; // Serwis zarządzający produktami.
+    private final BasketService basketService;
+    private final ProductService productService;
 
-    // Konstruktor klasy, wstrzykujący zależności do serwisów basketService i productService.
+
     public BasketController(BasketService basketService, ProductService productService) {
         this.basketService = basketService;
         this.productService = productService;

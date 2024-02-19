@@ -10,13 +10,9 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final CategoryService categoryService; // Serwis zarządzający kategoriami produktów.
+    private final CategoryService categoryService;
 
-    /**
-     * Konstruktor klasy CategoryController.
-     *
-     * @param categoryService Serwis obsługujący operacje na kategoriach, wstrzyknięty przez Springa.
-     */
+
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }

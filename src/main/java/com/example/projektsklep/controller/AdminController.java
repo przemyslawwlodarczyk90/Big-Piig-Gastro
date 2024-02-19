@@ -26,7 +26,6 @@ import java.util.Optional;
 @RequestMapping("/admin")
 public class AdminController {
 
-    // Wstrzyknięcie zależności do różnych serwisów używanych w kontrolerze.
     private final UserService userService;
     private final OrderService orderService;
     private final ProducerService authorService;
@@ -34,7 +33,7 @@ public class AdminController {
     private final ProductService productService;
     private final UserRepository userRepository;
 
-    // Konstruktor z wstrzykniętymi zależnościami.
+
     public AdminController(UserService userService, OrderService orderService, ProducerService authorService, CategoryService categoryService, ProductService productService, UserRepository userRepository) {
         this.userService = userService;
         this.orderService = orderService;
