@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj Produkt</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+<h1>Dodaj Produkt</h1>
+<form th:action="@{/admin/addProduct}" th:object="${product}" method="post" class="row g-3">
+    <div class="col-md-6">
+        <label for="title" class="form-label">Nazwa:</label>
+        <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="">
+    </div>
+    <div class="col-md-6">
+        <label for="description" class="form-label">Opis:</label>
+        <input type="text" id="description" th:field="*{description}" class="form-control" placeholder="">
+    </div>
+    <div class="col-md-6">
+        <label for="miniature" class="form-label">URL Obrazka:</label>
+        <input type="text" id="miniature" th:field="*{miniature}" class="form-control" placeholder="">
+    </div>
+    <div class="col-md-6">
+        <label for="price" class="form-label">Cena:</label>
+        <input type="text" id="price" th:field="*{price}" class="form-control" placeholder="">
+    </div>
+    <div class="col-md-4">
+        <label for="productType" class="form-label">Typ Produktu:</label>
+        <select id="productType" th:field="*{productType}" class="form-select">
+            <option value="">-- Wybierz --</option>
+            <option th:each="type : ${productTypes}" th:value="${type}" th:text="${type}"></option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="category" class="form-label">Kategoria:</label>
+        <select id="category" th:field="*{categoryId}" class="form-select">
+            <option value="">-- Wybierz --</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="author" class="form-label">Autor:</label>
+        <select id="author" th:field="*{authorId}" class="form-select">
+            <option value="">-- Wybierz --</option>
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+        </select>
+    </div>
+    <div class="col-12">
+        <label for="quantity" class="form-label">Ilość:</label>
+        <input type="number" id="quantity" th:field="*{quantity}" class="form-control" placeholder="">
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Dodaj Produkt</button>
+        <a href="/api/searchProduct/form" class="btn btn-secondary">Przejdź do wyszukiwarki</a>
+    </div>
+</form>
+
+<a href="/admin/panel" class="btn btn-secondary">Powrót</a>
+</body>
+</html>

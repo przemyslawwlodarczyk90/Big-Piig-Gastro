@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Użytkowników</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqQkNH2i8t13咫46A7E24KJE7XqZDsV40E+3H5+VT3q3H9+UF/h/H+k" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856UREqJFFbHnIF59F0m9/0Id/i675+T58Fz4NC596DCEeHjY4ceXJXnaEB" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9Yq36rI277C3H6C8=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<h1>Lista Użytkowników</h1>
+<div>
+    <a href="/users/add">Dodaj użytkownika</a>
+</div>
+
+<form action="#" method="get">
+    <select name="size" onchange="this.form.submit()">
+        <option th:selected="${userPage.size == 25}" value="25">25</option>
+        <option th:selected="${userPage.size == 50}" value="50">50</option>
+    </select>
+</form>
+
+<table>
+    <!-- Nagłówki tabeli... -->
+    <tr th:each="user : ${userPage.content}">
+        <!-- Dane użytkownika... -->
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <!-- inne pola -->
+        <td>
+            <a th:href="@{/users/edit/{id}(id=${user.id})}">Edytuj</a>
+            <a th:href="@{/users/delete/{id}(id=${user.id})}">Usuń</a>
+        </td>
+    </tr>
+</table>
+
+<!-- Paginacja -->
+<div>
+    <ul>
+        <!-- Poprzednia strona -->
+        <li th:if="${userPage.hasPrevious()}">
+            <a th:href="@{/users(page=${userPage.number - 1}, size=${userPage.size})}">Poprzednia</a>
+        </li>
+        <!-- Numery stron -->
+        <li th:each="pageNum : ${#numbers.sequence(0, userPage.totalPages - 1)}">
+            <a th:href="@{/users(page=${pageNum}, size=${userPage.size})}" th:text="${pageNum + 1}"></a>
+        </li>
+        <!-- Następna strona -->
+        <li th:if="${userPage.hasNext()}">
+            <a th:href="@{/users(page=${userPage.number + 1}, size=${userPage.size})}">Następna</a>
+        </li>
+    </ul>
+</div>
+
+<button onclick="history.back()">Powrót</button>
+</body>
+</html>

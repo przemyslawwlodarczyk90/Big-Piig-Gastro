@@ -1,0 +1,23 @@
+/* main.css */
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: navy;
+}
+
+.product-list, .product-grid {
+    list-style-type: none;
+    padding: 0;
+}
+
+.product {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.product h2 {
+    color: darkblue;
+}
