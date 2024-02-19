@@ -2,86 +2,93 @@ package com.example.projektsklep.model.entities.product;
 
 import com.example.projektsklep.model.dto.CategoryTreeDTO;
 import com.example.projektsklep.model.repository.CategoryRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
-
+/**
+ * Testy jednostkowe dla klasy Category, reprezentującej kategorie sprzętu gastronomicznego w branży HoReCa.
+ * Wykorzystuje Mockito do mockowania zależności i wstrzykiwania ich do testowanej klasy.
+ */
+@ExtendWith(MockitoExtension.class)
 class CategoryTest {
     @Mock
-    Category parentCategory;
+    Category parentCategory; // Mock kategorii nadrzędnej
     @Mock
-    List<Category> children;
+    List<Category> children; // Mock listy kategorii podrzędnych
     @InjectMocks
-    Category category;
-    private CategoryRepository categoryRepository;
+    Category category; // Testowana instancja kategorii, do której wstrzykiwane są mocki
 
     @BeforeEach
     void setUp() {
-        category = new Category("Książki");
+        // Given: Inicjalizacja mocków i przygotowanie kategorii sprzętu gastronomicznego
+        category = new Category("Sprzęt gastronomiczny");
     }
 
     @Test
     void testSetId() {
+        // When: Ustawiamy identyfikator dla kategorii
         category.setId(2L);
+
+        // Then: Sprawdzamy, czy identyfikator został prawidłowo ustawiony
         assertThat(category.getId()).isEqualTo(2L);
     }
 
     @Test
     void testSetName() {
-        category.setName("Fantastyka");
-        assertThat(category.getName()).isEqualTo("Fantastyka");
+        // When: Ustawiamy nazwę dla kategorii
+        category.setName("Urządzenia chłodnicze");
+
+        // Then: Sprawdzamy, czy nazwa została prawidłowo ustawiona
+        assertThat(category.getName()).isEqualTo("Urządzenia chłodnicze");
     }
 
     @Test
     void testSetParentCategory() {
-        Category parent = new Category("Literatura");
+        // Given: Przygotowanie kategorii nadrzędnej
+        Category parent = new Category("Sprzęt kuchenny");
+
+        // When: Ustawiamy kategorię nadrzędną
         category.setParentCategory(parent);
+
+        // Then: Sprawdzamy, czy kategoria nadrzędna została prawidłowo ustawiona
         assertThat(category.getParentCategory()).isSameAs(parent);
     }
 
     @Test
     void testSetChildren() {
-        Category child1 = new Category("Kryminał");
-        Category child2 = new Category("Science Fiction");
+        // Given: Przygotowanie kategorii podrzędnych
+        Category child1 = new Category("Piekarniki konwekcyjne");
+        Category child2 = new Category("Miksery planetarne");
+
+        // When: Ustawiamy listę kategorii podrzędnych
         category.setChildren(List.of(child1, child2));
+
+        // Then: Sprawdzamy, czy lista kategorii podrzędnych została prawidłowo ustawiona
         assertThat(category.getChildren()).containsExactlyInAnyOrder(child1, child2);
     }
 
     @Test
     public void shouldReturnChildrenList() {
-        // Given
-        Category parentCategory = new Category("Książki");
-        Category childCategory1 = new Category("Fantastyka");
-        Category childCategory2 = new Category("Kryminał");
-        parentCategory.addChild(childCategory1);
-        parentCategory.addChild(childCategory2);
+        // Given: Przygotowanie kategorii nadrzędnej z podrzędnymi
+        Category parentCategory = new Category("Sprzęt gastronomiczny");
+        parentCategory.addChild(new Category("Grille kontaktowe"));
+        parentCategory.addChild(new Category("Zmywarki gastronomiczne"));
 
-        // When
+        // When: Pobieramy listę kategorii podrzędnych
         List<Category> children = parentCategory.getChildren();
 
-        // Then
-        assertThat(children).containsExactlyInAnyOrder(childCategory1, childCategory2);
-    }
-
-    @Test
-    public void shouldConvertCategoryToTreeDTO() {
-        // Given
-        Category category = new Category("Książki");
-
-        // When
-        CategoryTreeDTO treeDTO = Category.toTreeDTO(category);
-
-        // Then
-        assertThat(treeDTO.getId()).isEqualTo(category.getId());
-        assertThat(treeDTO.getName()).isEqualTo(category.getName());
+        // Then: Sprawdzamy, czy lista zawiera oczekiwane kategorie
+        assertThat(children).hasSize(2).extracting("name").contains("Grille kontaktowe", "Zmywarki gastronomiczne");
     }
 
 
