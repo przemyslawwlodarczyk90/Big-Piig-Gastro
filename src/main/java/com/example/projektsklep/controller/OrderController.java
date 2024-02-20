@@ -23,12 +23,12 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrderController {
 
-    // Wstrzykiwanie zależności przez konstruktor dla serwisów używanych w kontrolerze.
+
     private final OrderService orderService;
     private final BasketService basketService;
     private final UserService userService;
 
-    // Konstruktor do wstrzykiwania serwisów.
+
     public OrderController(OrderService orderService, BasketService basketService, UserService userService) {
         this.orderService = orderService;
         this.basketService = basketService;

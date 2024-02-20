@@ -33,9 +33,7 @@ public class Address {
     }
 
 
-    public void setUser(User user) {
-        this.userId = user.getId(); // Set foreign key based on User ID
-    }
+
 
 
 }

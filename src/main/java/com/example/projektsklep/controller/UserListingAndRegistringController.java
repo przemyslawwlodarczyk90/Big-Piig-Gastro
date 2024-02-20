@@ -15,16 +15,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
+
 // Kontroler Spring MVC odpowiedzialny za obsługę żądań związanych z listowaniem użytkowników oraz ich rejestracją.
-@ControllerAdvice
+@ControllerAdvice // Adnotacja @ControllerAdvice pozwala na globalne obsłużenie wyjątków i atrybutów modelu dla wszystkich kontrolerów.
 @Controller
-@RequestMapping("/users") // Mapuje żądania dla ścieżki /users do metod w tej klasie.
+@RequestMapping("/users")
 public class UserListingAndRegistringController {
 
-    // Serwis użytkownika wykorzystywany do operacji na użytkownikach.
+
     private final UserService userService;
 
-    // Konstruktor do wstrzyknięcia zależności serwisu użytkownika.
+
     public UserListingAndRegistringController(UserService userService) {
         this.userService = userService;
     }

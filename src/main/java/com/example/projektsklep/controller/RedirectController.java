@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
-@Controller // Oznacza, że ta klasa jest kontrolerem w Spring MVC, obsługującym żądania HTTP.
+@Controller
 public class RedirectController {
 
     @GetMapping("/") // Mapuje żądanie HTTP GET dla głównego ścieżki aplikacji ("/") na tę metodę.

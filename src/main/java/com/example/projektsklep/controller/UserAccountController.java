@@ -19,15 +19,15 @@ import java.util.List;
 // Adnotacja @ControllerAdvice pozwala na globalne obsłużenie wyjątków i atrybutów modelu dla wszystkich kontrolerów.
 @ControllerAdvice
 @Controller
-@RequestMapping("/account") // Mapuje żądania na /account do metod w tej klasie.
+@RequestMapping("/account")
 public class UserAccountController {
 
-    // Wstrzyknięcie zależności do serwisów za pomocą konstruktora.
+
     private final OrderService orderService;
     private final UserService userService;
     private final BasketService basketService;
 
-    // Konstruktor do wstrzykiwania zależności.
+
     public UserAccountController(OrderService orderService, UserService userService, BasketService basketService) {
         this.orderService = orderService;
         this.userService = userService;
