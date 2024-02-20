@@ -16,7 +16,7 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     // Konstruktor z adnotacją @Autowired, wstrzykujący zależność RoleRepository do serwisu.
-    @Autowired
+
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository; // Przypisanie wstrzykniętego repozytorium do lokalnej zmiennej.
     }

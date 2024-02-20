@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-  private final OrderRepository orderRepository; // Repozytorium dla operacji na zamówieniach.
-  private final UserRepository userRepository; // Repozytorium dla operacji na użytkownikach.
+  private final OrderRepository orderRepository;
+  private final UserRepository userRepository;
 
-  // Konstruktor z wstrzykniętymi zależnościami repozytoriów.
+
   public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
     this.orderRepository = orderRepository;
     this.userRepository = userRepository;
@@ -41,10 +41,10 @@ public class OrderService {
   }
 
   // Wyszukiwanie DTO zamówienia po jego ID.
-  public OrderDTO findOrderDTOById(Long id) {
+  public Optional<OrderDTO> findOrderDTOById(Long id) {
     return orderRepository.findById(id)
-            .map(this::convertToOrderDTO) // Konwersja znalezionego zamówienia na DTO.
-            .orElse(null); // Zwrócenie null, jeśli zamówienie nie zostało znalezione.
+            .map(this::convertToOrderDTO);// Konwersja znalezionego zamówienia na DTO.
+          // Zwrócenie null, jeśli zamówienie nie zostało znalezione.
   }
 
   // Zapis nowego zamówienia z DTO.
@@ -196,7 +196,7 @@ public class OrderService {
 
   // Przygotowanie modelu dla formularza edycji zamówienia.
   public Model prepareEditOrderFormModel(Long orderId, Model model) throws OrderNotFoundException {
-    OrderDTO orderDTO = findOrderDTOById(orderId); // Wyszukanie DTO zamówienia.
+    Optional<OrderDTO> orderDTO = findOrderDTOById(orderId); // Wyszukanie DTO zamówienia.
     model.addAttribute("order", orderDTO); // Dodanie zamówienia do modelu.
     model.addAttribute("statuses", OrderStatus.values()); // Dodanie dostępnych statusów zamówienia do modelu.
     return model; // Zwrócenie modelu.

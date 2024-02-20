@@ -23,11 +23,11 @@ public class ProducerService {
     // Inicjalizacja loggera dla klasy, umożliwiająca logowanie działań.
     private static final Logger log = LoggerFactory.getLogger(ProducerService.class);
 
-    // Repozytorium do operacji na encjach typu Producer.
+
     private final ProducerRepository authorRepository;
 
-    // Wstrzyknięcie zależności repozytorium przez konstruktor.
-    @Autowired
+
+
     public ProducerService(ProducerRepository authorRepository) {
         this.authorRepository = authorRepository;
     }

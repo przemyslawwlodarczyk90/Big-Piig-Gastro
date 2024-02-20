@@ -18,12 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetail implements UserDetailsService {
 
-    // Pole przechowujące referencję do repozytorium użytkowników,
-    // używane do wyszukiwania użytkownika w bazie danych.
+
     private final UserRepository userRepo;
 
-    // Konstruktor klasy, wstrzykujący zależność do repozytorium użytkowników.
-    // Umożliwia dostęp do operacji CRUD na danych użytkowników.
+
     public UserDetail(UserRepository userRepo) {
         this.userRepo = userRepo;
     }

@@ -25,15 +25,6 @@ public class Address {
     private String city;
     private String postalCode;
     private String country;
-    private Long userId;
-
-
-    public Address(String s, String s2, String s1, String s3) {
-
-    }
-
-
-
 
 
 }

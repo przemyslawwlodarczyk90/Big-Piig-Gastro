@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 
 
-// Kontroler Spring MVC odpowiedzialny za obsługę żądań związanych z listowaniem użytkowników oraz ich rejestracją.
+
 @ControllerAdvice // Adnotacja @ControllerAdvice pozwala na globalne obsłużenie wyjątków i atrybutów modelu dla wszystkich kontrolerów.
 @Controller
 @RequestMapping("/users")

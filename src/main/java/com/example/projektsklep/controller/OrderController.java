@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/orders")
@@ -53,7 +54,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public String orderDetails(@PathVariable Long orderId, Model model) {
         try {
-            OrderDTO orderDTO = orderService.findOrderDTOById(orderId); // Pobieranie DTO zamówienia.
+            Optional<OrderDTO> orderDTO = orderService.findOrderDTOById(orderId); // Pobieranie DTO zamówienia.
             model.addAttribute("order", orderDTO); // Dodanie zamówienia do modelu.
             return "order_details"; // Zwraca nazwę widoku ze szczegółami zamówienia.
         } catch (OrderNotFoundException e) {

@@ -30,7 +30,6 @@ import java.util.Map;
 
 public class BasketService {
 
-    // Repozytoria i serwisy wstrzyknięte przez Springa do zarządzania zamówieniami, użytkownikami i produktami.
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ProductRepository productRepository;
@@ -40,7 +39,7 @@ public class BasketService {
     // Obiekt koszyka, który może być używany do przechowywania dodatkowych informacji o zamówieniu.
     private Basket basket;
 
-    // Konstruktor klasy serwisu, inicjalizujący wstrzyknięte repozytoria i serwisy oraz tworzący nowy koszyk.
+
     public BasketService(OrderRepository orderRepository, UserService userService, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
@@ -102,7 +101,7 @@ public class BasketService {
     }
 
     /**
-     * Tworzy DTO (Data Transfer Object) zamówienia na podstawie aktualnego stanu koszyka.
+     * Tworzy DTO zamówienia na podstawie aktualnego stanu koszyka.
      *
      * @param userId Identyfikator użytkownika, dla którego tworzone jest zamówienie.
      * @return DTO zamówienia zawierające wszystkie produkty z koszyka, ich ilość, całkowitą cenę oraz adres dostawy.
