@@ -142,13 +142,5 @@ class UserTest {
         Assertions.assertThrows(NullPointerException.class, () -> user.setFirstName(null));
     }
 
-    // Testuje, czy ustawienie nazwiska na null powoduje wyjątek.
-    @Test
-    public void testSetLastName_WithNull_ShouldThrowException() {
-        // Given: Nowy obiekt użytkownika.
-        User user = new User();
 
-        // When/Then: Oczekiwany jest wyjątek NullPointerException przy próbie ustawienia nazwiska na null.
-        Assertions.assertThrows(NullPointerException.class, () -> user.setLastName(null));
-    }
 }

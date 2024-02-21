@@ -21,7 +21,7 @@
             <td th:text="${product.title}"></td>
             <td th:text="${product.price}"></td>
             <td>
-                <a th:href="@{/api/productDetails(productId=${product.id})}" class="btn btn-info">Szczegóły</a>
+                <a th:href="@{/api/productDetails/{productId}(productId=${product.id})}" class="btn btn-info">Szczegóły</a>
                 <form th:action="@{/basket/add/{productId}(productId=${product.id})}" method="post">
                         <input type="hidden" name="quantity" value="1"/>
                     <div sec:authorize="hasAuthority('USER')">   <button type="submit" class="btn btn-success">Dodaj do koszyka</button></div>

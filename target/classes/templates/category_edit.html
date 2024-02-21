@@ -12,7 +12,7 @@
 </head>
 <body class="container mt-5">
 <h2>Edytuj Kategorię</h2>
-<form th:action="@{/admin/editCategory/{id}(id=${category.id})}" th:object="${category}" method="post">
+<form th:action="@{/categories/edit/{id}(id=${category.id})}" th:object="${category}" method="post">
     <div class="mb-3">
         <label for="name" class="form-label">Nazwa kategorii:</label>
         <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Nazwa kategorii">

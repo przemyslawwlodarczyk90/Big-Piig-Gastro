@@ -83,7 +83,7 @@ public class OrderController {
         String redirectUrl = basketService.finalizeOrderAndRedirect(userDTO.id(), newShippingAddress, useDifferentAddress); // Finalizacja zamówienia i przekierowanie.
 
         redirectAttributes.addFlashAttribute("success", "Zamówienie zostało złożone."); // Dodanie wiadomości sukcesu.
-        return redirectUrl; // Przekierowanie do URL.
+        return redirectUrl;
     }
 
 }
