@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-// Adnotacja @ControllerAdvice pozwala na globalne obsłużenie wyjątków i atrybutów modelu dla wszystkich kontrolerów.
-@ControllerAdvice
+
 @Controller
 @RequestMapping("/account")
 public class UserAccountController {

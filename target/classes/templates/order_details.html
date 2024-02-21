@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Szczegóły zamówienia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqQkNH2i8t13咫46A7E24KJE7XqZDsV40E+3H5+VT3q3H9+UF/h/H+k" crossorigin="anonymous">
+</head>
+<body class="container mt-4">
+<h1>Szczegóły zamówienia</h1>
+
+<div class="mb-3">
+    <p>ID zamówienia: <span th:text="${order.id}"></span></p>
+    <p>Status zamówienia: <span th:text="${order.orderStatus}"></span></p>
+    <p>Data utworzenia: <span th:text="${order.dateCreated}"></span></p>
+    <p>Całkowita cena: <span th:text="${order.totalPrice}"></span></p>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Produkt</th>
+        <th>Ilość</th>
+        <th>Cena za sztukę</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="line : ${order.lineOfOrders}">
+        <td th:text="${line.product.title}"></td>
+        <td th:text="${line.quantity}"></td>
+        <td th:text="${line.unitPrice}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<button onclick="history.back()" class="btn btn-secondary">Powrót</button>
+</body>
+</html>

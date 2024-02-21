@@ -11,10 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -112,10 +109,15 @@ public class ApiController {
         Optional<String> weatherData = weatherService.getWeatherData(city, principal);
         if (weatherData.isPresent()) {
             model.addAttribute("weatherData", weatherData.get());
-            return "weather"; // Zwraca nazwę widoku pogody.
+            return "weather"; // nazwa widoku
         } else {
             model.addAttribute("error", "Nie można znaleźć danych o pogodzie.");
-            return "weather"; // Zwraca nazwę widoku pogody z komunikatem o błędzie.
+            return "weather";
         }
+    }
+
+    @PostMapping("/weather")
+    public String handleWeatherForm(@RequestParam(name = "city") String city, Model model, Principal principal) {
+        return "redirect:/weather?city=" + city; // Przekierowanie do metody GET, aby wyświetlić wyniki.
     }
 }

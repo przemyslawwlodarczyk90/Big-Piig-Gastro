@@ -194,12 +194,14 @@ public class OrderService {
     return response;
   }
 
-  // Przygotowanie modelu dla formularza edycji zamówienia.
-  public Model prepareEditOrderFormModel(Long orderId, Model model) throws OrderNotFoundException {
-    Optional<OrderDTO> orderDTO = findOrderDTOById(orderId); // Wyszukanie DTO zamówienia.
-    model.addAttribute("order", orderDTO); // Dodanie zamówienia do modelu.
-    model.addAttribute("statuses", OrderStatus.values()); // Dodanie dostępnych statusów zamówienia do modelu.
-    return model; // Zwrócenie modelu.
+  // Metoda serwisu przygotowująca model dla formularza edycji zamówienia.
+  public Model prepareEditOrderFormModel(Long orderId, Model model) {
+    // Pobiera DTO zamówienia na podstawie ID. Jeśli nie znajdzie zamówienia, rzuca wyjątek OrderNotFoundException.
+    OrderDTO orderDTO = findOrderDTOById(orderId).orElseThrow(() -> new OrderNotFoundException("Zamówienie o ID " + orderId + " nie zostało znalezione"));
+    model.addAttribute("order", orderDTO);
+    // Dodaje do modelu listę możliwych statusów zamówienia.
+    model.addAttribute("statuses", OrderStatus.values());
+    return model;
   }
 
   // Przygotowanie modelu dla listy zamówień według statusu.
@@ -212,5 +214,7 @@ public class OrderService {
     model.addAttribute("orders", orders); // Dodanie listy zamówień do modelu.
     model.addAttribute("selectedStatus", orderStatus.name()); // Dodanie wybranego statusu do modelu.
   }
+
+
 
 }

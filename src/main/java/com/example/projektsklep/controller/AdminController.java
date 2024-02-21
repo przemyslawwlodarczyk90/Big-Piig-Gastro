@@ -174,34 +174,28 @@ public class AdminController {
         return "redirect:/categories"; // Przekierowanie do listy kategorii.
     }
 
-    // Metoda wyświetlająca formularz edycji statusu zamówienia.
+    // Metoda GET, która obsługuje żądanie wyświetlenia formularza do edycji statusu zamówienia.
     @GetMapping("/editOrderStatus/{orderId}")
     public String showEditOrderForm(@PathVariable Long orderId, Model model) {
-        // Próbuje przygotować model dla formularza edycji zamówienia.
         try {
+            // Wywołuje metodę serwisu, aby przygotować model potrzebny do wyświetlenia formularza edycji.
             orderService.prepareEditOrderFormModel(orderId, model);
-            return "order_edit_form"; // Zwraca nazwę widoku formularza edycji statusu zamówienia.
+            // Jeśli zamówienie zostanie znalezione, zwraca widok 'order_edit_form'.
+            return "order_edit_form"; // Upewnij się, że ten widok istnieje.
         } catch (OrderNotFoundException e) {
-            model.addAttribute("error", "Zamówienie nie znalezione"); // Dodaje komunikat o błędzie do modelu.
-            return "error"; // Zwraca widok strony błędu.
+            // W przypadku nieznalezienia zamówienia, do modelu dodawany jest komunikat o błędzie.
+            model.addAttribute("error", "Order not found");
+            // Następnie zwracany jest widok błędu.
+            return "error";
         }
     }
 
-    // Metoda obsługująca aktualizację statusu zamówienia.
     @PostMapping("/editOrderStatus/{orderId}")
-    public String updateOrderStatus(@PathVariable Long orderId, @ModelAttribute("order") OrderDTO orderDTO, Model model, HttpServletRequest request) {
-        // Próbuje zaktualizować status zamówienia i przekierowuje do poprzedniej strony lub wyświetla błąd.
-        try {
-            orderService.updateOrderStatus(orderId, orderDTO.orderStatus());
-            String referer = request.getHeader("Referer");
-            return "redirect:" + (referer != null ? referer : "/user_orders"); // Przekierowanie do poprzedniej strony.
-        } catch (OrderNotFoundException e) {
-            model.addAttribute("error", "Zamówienie nie znalezione"); // Dodaje komunikat o błędzie do modelu.
-            return "error"; // Zwraca widok strony błędu.
-        } catch (Exception e) {
-            model.addAttribute("error", "Błąd podczas aktualizacji statusu zamówienia"); // Dodaje komunikat o błędzie do modelu.
-            return "order_edit_form"; // Zwraca widok formularza z komunikatem o błędzie.
-        }
+    public String updateOrderStatus(@PathVariable Long orderId, @ModelAttribute("order") OrderDTO orderDTO) {
+        // Wywołuje metodę serwisu do aktualizacji statusu zamówienia na podstawie danych przesłanych w formularzu.
+        orderService.updateOrderStatus(orderId, orderDTO.orderStatus());
+        // Po pomyślnej aktualizacji statusu, użytkownik jest przekierowywany do listy zamówień.
+        return "redirect:/admin/ordersByStatus";
     }
 
     // Metoda obsługująca wyszukiwanie użytkowników po nazwisku.

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Wyszukiwanie produktów</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+</head>
+<body class="container mt-3">
+<h1>Formularz wyszukiwania produktów</h1>
+<form th:action="@{/api/searchProduct}" method="get">
+    <div class="mb-3">
+        <label for="title" class="form-label">Tytuł</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="Wpisz tytuł produktu">
+    </div>
+    <div class="mb-3">
+        <label for="authorId" class="form-label">Autor</label>
+        <select class="form-select" id="authorId" name="authorId">
+            <option value="">Wybierz autora</option>
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="categoryId" class="form-label">Kategoria</label>
+        <select class="form-select" id="categoryId" name="categoryId">
+            <option value="">Wybierz kategorię</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Szukaj</button>
+    <a href="/home" class="btn btn-secondary">  Strona główna </a>
+    <div sec:authorize="hasAuthority('ADMIN')"><a href="/admin/panel" class="btn btn-primary btn-success"> Admin-panel </a></div>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchForm = document.getElementById('searchForm');
+        const titleInput = document.getElementById('title');
+
+        const savedSearchParams = JSON.parse(localStorage.getItem('searchParams'));
+        if (savedSearchParams) {
+            titleInput.value = savedSearchParams.title;
+        }
+
+        searchForm.addEventListener('submit', function () {
+            const searchParams = {
+                title: titleInput.value,
+            };
+            localStorage.setItem('searchParams', JSON.stringify(searchParams));
+        });
+    });
+</script>
+</body>
+</html>

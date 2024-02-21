@@ -1,20 +1,30 @@
 package com.example.projektsklep.controller;
 
 import com.example.projektsklep.exception.ErrorHandlingException;
+import com.example.projektsklep.exception.OrderNotFoundException;
 import com.example.projektsklep.exception.ProductNotFoundException;
+import com.example.projektsklep.model.dto.OrderDTO;
+import com.example.projektsklep.service.OrderService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
+@ControllerAdvice
 @Controller
 public class ErrorController {
     private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
+    private final OrderService orderService;
+
+    public ErrorController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     /**
      * Obsługuje niestandardowe błędy w aplikacji.
@@ -66,4 +76,6 @@ public class ErrorController {
         model.addAttribute("error", "Produkt nie znaleziony");
         return "product_not_found";
     }
+
+
 }

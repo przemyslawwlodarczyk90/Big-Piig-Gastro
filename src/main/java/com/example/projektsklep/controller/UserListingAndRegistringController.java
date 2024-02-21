@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 
 
-@ControllerAdvice // Adnotacja @ControllerAdvice pozwala na globalne obsłużenie wyjątków i atrybutów modelu dla wszystkich kontrolerów.
+
 @Controller
 @RequestMapping("/users")
 public class UserListingAndRegistringController {

@@ -3,7 +3,7 @@ package com.example.projektsklep.controller;
 
 import com.example.projektsklep.exception.OrderNotFoundException;
 import com.example.projektsklep.model.dto.AddressDTO;
-import com.example.projektsklep.model.dto.OrderDTO;
+
 import com.example.projektsklep.model.dto.UserDTO;
 import com.example.projektsklep.service.BasketService;
 import com.example.projektsklep.service.OrderService;
@@ -18,7 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
-import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/orders")
@@ -50,17 +50,18 @@ public class OrderController {
     }
 
     // Szczegóły zamówienia; obsługuje wyjątek, gdy zamówienie nie zostanie znalezione.
-    @ExceptionHandler(OrderNotFoundException.class) // Obsługuje wyjątek, gdy zamówienie nie zostanie znalezione.
+    @ExceptionHandler(OrderNotFoundException.class) // Anotacja wskazuje, że ta metoda obsługuje wyjątki typu OrderNotFoundException.
     @GetMapping("/{orderId}")
     public String orderDetails(@PathVariable Long orderId, Model model) {
-        try {
-            Optional<OrderDTO> orderDTO = orderService.findOrderDTOById(orderId); // Pobieranie DTO zamówienia.
-            model.addAttribute("order", orderDTO); // Dodanie zamówienia do modelu.
-            return "order_details"; // Zwraca nazwę widoku ze szczegółami zamówienia.
-        } catch (OrderNotFoundException e) {
-            model.addAttribute("error", "Zamówienie nie znalezione"); // Dodanie wiadomości błędu do modelu.
-            return "error"; // Zwraca nazwę widoku błędu.
-        }
+        // Wywołanie metody serwisu, aby pobrać szczegóły zamówienia. Jeśli zamówienie istnieje, jest ono dodawane do modelu.
+        // W przeciwnym razie do modelu dodawany jest komunikat o błędzie.
+        orderService.findOrderDTOById(orderId)
+                .ifPresentOrElse(
+                        orderDTO -> model.addAttribute("order", orderDTO),
+                        () -> model.addAttribute("error", "Zamówienie nie znalezione")
+                );
+        // Zwraca widok 'order_details' jeśli zamówienie zostało znalezione, w przeciwnym razie zwraca widok błędu.
+        return orderService.findOrderDTOById(orderId).isPresent() ? "order_details" : "error";
     }
 
     // Tworzy zamówienie na podstawie zawartości koszyka.
@@ -86,7 +87,3 @@ public class OrderController {
     }
 
 }
-
-
-
-

@@ -70,6 +70,23 @@ public class User {
         this.lastName = lastName;
     }
 
+    public void addOrder(Order order) {
+        if (orders == null) {
+            orders = new HashSet<>(); // Zainicjuj, jeśli null
+        }
+        orders.add(order);
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+    public void setFirstName(String firstName) {
+        if (firstName == null) {
+            throw new NullPointerException("First name cannot be null.");
+        }
+        this.firstName = firstName;
+    }
+
 
 
 }
