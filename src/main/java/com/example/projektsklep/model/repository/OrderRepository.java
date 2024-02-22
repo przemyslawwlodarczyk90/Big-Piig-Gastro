@@ -23,12 +23,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(long id);
 
 
-    Order save(Order order);
-
-
-    void delete(Order order);
-
-
     Page<Order> findAll(Pageable pageable);
 
 
