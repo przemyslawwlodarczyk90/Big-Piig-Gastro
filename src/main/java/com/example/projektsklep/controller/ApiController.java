@@ -90,8 +90,8 @@ public class ApiController {
     }
 
     // Metoda wyświetlająca szczegóły produktu.
-    @GetMapping("/productDetails")
-    public String productDetails(@RequestParam("productId") Long productId, Model model) {
+    @GetMapping("/productDetails/{productId}")
+    public String productDetails(@PathVariable("productId") Long productId, Model model) {
         ProductDTO productDTO = productService.findProductDTOById(productId);
         model.addAttribute("product", productDTO);
         return "product_details"; // Zwraca nazwę widoku szczegółów produktu.

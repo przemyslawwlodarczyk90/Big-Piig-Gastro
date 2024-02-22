@@ -68,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/account/**")).hasAuthority("USER")
                         .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("api/productDetails**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("api/productDetails/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/users/new")).permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
