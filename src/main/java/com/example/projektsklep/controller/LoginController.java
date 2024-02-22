@@ -16,7 +16,6 @@ public class LoginController {
      */
     @GetMapping("/login")
     public String login() {
-        // Zwraca nazwę widoku strony logowania, który zostanie wyświetlony użytkownikowi.
         return "login";
     }
 }

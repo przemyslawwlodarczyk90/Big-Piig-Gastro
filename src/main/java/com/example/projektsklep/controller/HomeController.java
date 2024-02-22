@@ -50,7 +50,7 @@ public class HomeController {
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isUser", isUser);
 
-        // Zwrócenie nazwy widoku, który ma zostać wyświetlony.
+
         return "home";
     }
 }

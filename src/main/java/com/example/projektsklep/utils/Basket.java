@@ -18,7 +18,6 @@ public class Basket {
     // Lista linii zamówień przechowująca produkty dodane do koszyka i ich ilości.
     private List<LineOfOrder> lineOfOrders;
 
-    // Konstruktor inicjalizujący listę linii zamówień jako nową, pustą listę.
     public Basket() {
         this.lineOfOrders = new ArrayList<>();
     }

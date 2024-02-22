@@ -7,7 +7,6 @@ import com.example.projektsklep.model.dto.*;
 import com.example.projektsklep.model.enums.OrderStatus;
 import com.example.projektsklep.model.repository.UserRepository;
 import com.example.projektsklep.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
