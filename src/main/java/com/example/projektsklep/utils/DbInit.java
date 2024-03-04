@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-@Profile("dev") // Oznacza, że ta klasa konfiguracyjna zostanie użyta tylko w profilu deweloperskim.
+@Profile("dev")
 @Component
 public class DbInit {
 
@@ -46,62 +46,55 @@ public class DbInit {
         this.orderRepository = orderRepository;
     }
 
-    @PostConstruct // Metoda wywołana bezpośrednio po utworzeniu beana i wstrzyknięciu zależności.
+    @PostConstruct
     private void postConstruct() {
-        // Tworzenie i zapisywanie ról w bazie danych.
+
         Role adminRole = Role.fromAdminOrUser(AdminOrUser.ADMIN);
         Role userRole = Role.fromAdminOrUser(AdminOrUser.USER);
         Role savedAdminRole = roleRepository.save(adminRole);
         Role savedUserRole = roleRepository.save(userRole);
 
-        // Tworzenie i zapisywanie użytkowników w bazie danych.
+
         User user = User.builder()
                 .firstName("user")
                 .lastName("user")
                 .email("user@example.com")
-                .passwordHash(passwordEncoder.encode("user")) // Kodowanie hasła użytkownika.
-                .roles(Set.of(savedUserRole)) // Przypisanie roli użytkownika.
+                .passwordHash(passwordEncoder.encode("user"))
+                .roles(Set.of(savedUserRole))
                 .build();
         User admin = User.builder()
                 .firstName("admin")
                 .lastName("admin")
                 .email("admin@example.com")
-                .passwordHash(passwordEncoder.encode("admin")) // Kodowanie hasła admina.
-                .roles(Set.of(savedAdminRole)) // Przypisanie roli admina.
+                .passwordHash(passwordEncoder.encode("admin"))
+                .roles(Set.of(savedAdminRole))
                 .build();
         userRepository.save(user);
         userRepository.save(admin);
 
-        // Tworzenie kategorii i producentów (autorów).
         List<Category> categories = createCategories();
         List<Producer> authors = createAuthors();
 
-        // Tworzenie produktów.
         createProducts(categories, authors);
-
-        // Przypisywanie zamówień do użytkowników.
         assignOrdersToUsers();
     }
 
-    // Tworzenie kategorii produktów.
     private List<Category> createCategories() {
         List<Category> categories = new ArrayList<>();
         categories.add(new Category("Piece konwekcyjne"));
         categories.add(new Category("Zmywarki przemysłowe"));
-        categories.forEach(categoryRepository::save); // Zapis kategorii do bazy danych.
+        categories.forEach(categoryRepository::save);
         return categories;
     }
 
-    // Tworzenie producentów (autorów) produktów.
     private List<Producer> createAuthors() {
         List<Producer> authors = new ArrayList<>();
         authors.add(new Producer("Rational"));
         authors.add(new Producer("Electrolux"));
-        authors.forEach(authorRepository::save); // Zapis producentów do bazy danych.
+        authors.forEach(authorRepository::save);
         return authors;
     }
 
-    // Tworzenie produktów i przypisywanie ich do kategorii i producentów.
     private void createProducts(List<Category> categories, List<Producer> authors) {
         Random rand = new Random();
         List<String> productNames = List.of("Piec Rational", "Zmywarka Electrolux", "Chłodziarka Coldex", "Mikser Bosh", "Grill Weber");
@@ -120,22 +113,21 @@ public class DbInit {
             product.setProductType(ProductType.KITCHEN_EQUIPMENT);
             product.setPublished(true);
             product.setDateCreated(LocalDate.now());
-            productRepository.save(product); // Zapis produktu do bazy danych.
+            productRepository.save(product);
         }
     }
 
-    // Przypisywanie zamówień do losowo wybranych użytkowników.
     private void assignOrdersToUsers() {
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
             for (int i = 1; i <= 20; i++) {
                 User user = users.get(i % users.size());
                 Order order = new Order();
-                order.setAccountHolder(user); // Przypisanie użytkownika do zamówienia.
-                order.setOrderStatus(OrderStatus.NEW_ORDER); // Ustawienie statusu zamówienia.
-                order.setDateCreated(LocalDate.now()); // Ustawienie daty utworzenia zamówienia.
-                order.setTotalPrice(BigDecimal.valueOf(500 + (i * 30))); // Ustawienie ceny zamówienia.
-                orderRepository.save(order); // Zapis zamówienia do bazy danych.
+                order.setAccountHolder(user);
+                order.setOrderStatus(OrderStatus.NEW_ORDER);
+                order.setDateCreated(LocalDate.now());
+                order.setTotalPrice(BigDecimal.valueOf(500 + (i * 30)));
+                orderRepository.save(order);
             }
         }
     }

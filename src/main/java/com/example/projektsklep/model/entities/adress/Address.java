@@ -1,13 +1,11 @@
 package com.example.projektsklep.model.entities.adress;
 
-import com.example.projektsklep.model.entities.user.User;
+
 import jakarta.persistence.*;
-//import jdk.internal.loader.BuiltinClassLoader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 @Entity
 @Data

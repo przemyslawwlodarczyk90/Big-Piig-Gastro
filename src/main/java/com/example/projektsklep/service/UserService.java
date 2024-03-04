@@ -11,7 +11,6 @@ import com.example.projektsklep.model.enums.AdminOrUser;
 import com.example.projektsklep.model.repository.AddressRepository;
 import com.example.projektsklep.model.repository.RoleRepository;
 import com.example.projektsklep.model.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,40 +40,35 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Metoda zwracająca stronicowaną listę użytkowników jako DTO.
     public Page<UserDTO> findAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
-                .map(this::convertToUserDTO); // Konwersja użytkowników do DTO.
+                .map(this::convertToUserDTO);
     }
 
-    // Metoda wyszukująca użytkownika po ID i zwracająca go jako DTO, jeśli istnieje.
     public Optional<UserDTO> findUserById(Long id) {
         return userRepository.findById(id)
-                .map(this::convertToUserDTO); // Konwersja użytkownika do DTO.
+                .map(this::convertToUserDTO);
     }
 
-    // Metoda zapisująca nowego użytkownika w bazie danych z przypisaniem adresu i roli.
-    @Transactional // Zapewnia wykonanie operacji w ramach transakcji.
-    public UserDTO saveUser(UserDTO userDTO, AddressDTO addressDTO, AdminOrUser role) {
+
+    @Transactional
+    public void saveUser(UserDTO userDTO, AddressDTO addressDTO, AdminOrUser role) {
         Address address = null;
-        // Konwersja i zapis adresu, jeśli podano DTO.
+
         if (addressDTO != null) {
             address = addressService.convertToEntity(addressDTO);
             address = addressRepository.save(address);
         }
 
-        User user = convertToUser(userDTO); // Konwersja DTO użytkownika na encję.
+        User user = convertToUser(userDTO);
 
-        // Przypisanie adresu do użytkownika.
+
         if (address != null) {
             user.setAddress(address);
         }
 
-        // Kodowanie hasła użytkownika.
         String encodedPassword = passwordEncoder.encode(userDTO.password());
         user.setPasswordHash(encodedPassword);
-
-        // Przypisanie roli do użytkownika.
         Set<Role> roles = new HashSet<>();
         if (role != null) {
             Role userRole = roleRepository.findByRoleType(role)
@@ -83,54 +77,32 @@ public class UserService {
         }
         user.setRoles(roles);
 
-        // Zapis użytkownika w bazie danych.
         user = userRepository.save(user);
 
-        return convertToUserDTO(user); // Konwersja zapisanego użytkownika na DTO.
+        convertToUserDTO(user);
     }
 
-    // Metoda usuwająca użytkownika po ID.
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
-    }
 
-    // Metoda wyszukująca użytkownika po adresie e-mail i zwracająca go jako DTO.
     public Optional<UserDTO> findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(this::convertToUserDTO);
     }
 
-    // Metoda wyszukująca użytkowników po nazwisku, ignorując wielkość liter.
     public List<UserDTO> findUsersByLastName(String lastName) {
         return userRepository.findByLastNameIgnoreCaseContaining(lastName).stream()
                 .map(this::convertToUserDTO)
                 .collect(Collectors.toList());
     }
 
-    // Metoda aktualizująca profil użytkownika lub admina.
-    public UserDTO updateUserProfileOrAdmin(Long userId, UserDTO userDTO, boolean isAdmin, String authenticatedUserEmail) {
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Aktualizacja danych użytkownika.
-        updateUserFields(existingUser, userDTO);
-
-        userRepository.save(existingUser); // Zapis zmian w bazie danych.
-
-        return convertToUserDTO(existingUser); // Zwrócenie zaktualizowanego użytkownika jako DTO.
-    }
-
-    // Aktualizacja profilu i adresu użytkownika na podstawie przekazanego adresu e-mail i danych DTO.
-    public UserDTO updateUserProfileAndAddress(String email, UserDTO userDTO) {
-        // Wyszukiwanie użytkownika w bazie danych po adresie e-mail. Jeśli użytkownik nie istnieje, rzuca wyjątek.
+    public void updateUserProfileAndAddress(String email, UserDTO userDTO) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
-        // Aktualizacja danych osobowych użytkownika.
         user.setFirstName(userDTO.firstName());
         user.setLastName(userDTO.lastName());
 
-        // Ustawienie lub aktualizacja adresu użytkownika. Jeśli adres już istnieje, aktualizuje go; jeśli nie - tworzy nowy.
+
         Address address = user.getAddress() != null ? user.getAddress() : new Address();
         AddressDTO addressDTO = userDTO.address();
         if (addressDTO != null) {
@@ -146,7 +118,7 @@ public class UserService {
         userRepository.save(user);
 
         // Konwersja zaktualizowanego użytkownika na DTO i zwrócenie go.
-        return convertToUserDTO(user);
+        convertToUserDTO(user);
     }
 
     // Konwersja obiektu User na DTO.
@@ -192,27 +164,7 @@ public class UserService {
         return user;
     }
 
-    // Aktualizacja pól użytkownika na podstawie danych z DTO.
-    private void updateUserFields(User user, UserDTO userDTO) {
-        user.setEmail(userDTO.email());
-        if (userDTO.password() != null) {
-            user.setPasswordHash(userDTO.password());
-        }
-        if (userDTO.address() != null) {
-            Address address = addressService.convertToEntity(userDTO.address());
-            user.setAddress(address);
-        }
-    }
 
-    // Tworzenie UserDTO na podstawie danych wejściowych.
-    public UserDTO createUserDTO(UserDTO userDTO, AddressDTO addressDTO) {
-        return UserDTO.builder()
-                .email(userDTO.email())
-                .firstName(userDTO.firstName())
-                .lastName(userDTO.lastName())
-                .address(addressDTO)
-                .build();
-    }
 
     // Inicjalizacja nowego UserDTO z pustymi wartościami.
     public UserDTO initializeNewUserDTO() {
@@ -228,18 +180,7 @@ public class UserService {
                 .build();
     }
 
-    // Rejestracja użytkownika z określoną rolą.
-    @Transactional // Zapewnia, że cała operacja rejestracji jest wykonywana w ramach jednej transakcji.
-    public UserDTO registerUser(UserDTO userDTO, String roleTypeStr) throws Exception {
-        AdminOrUser roleType;
-        try {
-            roleType = AdminOrUser.valueOf(roleTypeStr.toUpperCase()); // Próba konwersji stringa na enum.
-        } catch (IllegalArgumentException e) {
-            throw new Exception("Invalid role type: " + roleTypeStr); // Rzucenie wyjątku, jeśli podana rola jest nieprawidłowa.
-        }
 
-        return saveUser(userDTO, userDTO.address(), roleType); // Zapisanie użytkownika z wykorzystaniem metody saveUser.
-    }
 
     // Pobranie szczegółów użytkownika dla panelu na podstawie e-maila.
     public UserDTO getUserDetailsForPanel(String email) {
@@ -251,7 +192,7 @@ public class UserService {
         return userDTO;
     }
 
-    // Logowanie informacji o użytkowniku i adresie.
+
     private void logUserAndAddressDetails(UserDTO userDTO) {
         System.out.println("UserDTO: " + userDTO);
         if (userDTO.address() != null) {

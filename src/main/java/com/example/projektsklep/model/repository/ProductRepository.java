@@ -12,13 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-
     Page<Product> findAll(Pageable pageable);
-
-
-    Optional<Product> findById(long id);
-
-
 
     void deleteById(Long id);
 

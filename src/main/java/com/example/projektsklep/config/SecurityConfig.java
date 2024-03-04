@@ -1,6 +1,6 @@
 package com.example.projektsklep.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,31 +13,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-/**
- * Klasa konfiguracyjna do ustawień bezpieczeństwa aplikacji.
- */
+
 @Configuration
 public class SecurityConfig {
 
 
     private UserDetailsService userDetailsService;
 
-    /**
-     * Definiuje bean PasswordEncoder, który dostarcza mechanizm do kodowania i weryfikacji haseł.
-     *
-     * @return instancja BCryptPasswordEncoder.
-     */
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Konfiguruje dostawcę uwierzytelniania za pomocą DaoAuthenticationProvider, który korzysta z UserDetailsService
-     * do pobierania informacji o użytkownikach oraz PasswordEncoder do kodowania haseł.
-     *
-     * @return skonfigurowany bean AuthenticationProvider.
-     */
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -46,14 +38,6 @@ public class SecurityConfig {
         return authenticationProvider;
     }
 
-    /**
-     * Definiuje główny łańcuch filtrów bezpieczeństwa aplikacji. Określa zasady dostępu do różnych części aplikacji,
-     * konfigurację logowania i wylogowywania, oraz dodatkowe ustawienia bezpieczeństwa jak CSRF i CORS.
-     *
-     * @param http obiekt HttpSecurity do konfiguracji zabezpieczeń.
-     * @return skonfigurowany łańcuch filtrów bezpieczeństwa.
-     * @throws Exception w przypadku błędów konfiguracji.
-     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

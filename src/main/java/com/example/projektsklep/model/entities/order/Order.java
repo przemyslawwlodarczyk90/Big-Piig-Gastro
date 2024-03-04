@@ -12,11 +12,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Klasa reprezentująca zamówienie w systemie sklepu.
- */
+
 @Entity
 @Getter
 @Setter
@@ -28,38 +27,33 @@ public class Order implements Observable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Unikalny identyfikator zamówienia
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "account_holder_id")
-    private User accountHolder; // Właściciel zamówienia, użytkownik który złożył zamówienie
+    private User accountHolder;
 
     @ManyToOne
     @JoinColumn(name = "shipping_address_id")
-    private Address shippingAddress; // Adres wysyłki zamówienia
+    private Address shippingAddress;
 
     @Enumerated(EnumType.ORDINAL)
-    private OrderStatus orderStatus; // Status zamówienia
-
+    private OrderStatus orderStatus;
     @Column(name = "date_created")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateCreated; // Data utworzenia zamówienia
+    private LocalDate dateCreated;
 
     @Column(name = "sent_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate sentAt; // Data wysyłki zamówienia
-
+    private LocalDate sentAt;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<LineOfOrder> lineOfOrders = new ArrayList<>(); // Lista pozycji zamówienia
+    private List<LineOfOrder> lineOfOrders = new ArrayList<>();
 
-    private BigDecimal totalPrice; // Całkowita wartość zamówienia
-
+    private BigDecimal totalPrice;
     @Transient
-    private List<Observer> registeredObservers = new ArrayList<>(); // Lista obserwatorów zamówienia
+    private List<Observer> registeredObservers = new ArrayList<>();
 
-    /**
-     * Oblicza całkowitą wartość zamówienia na podstawie sumy cen wszystkich pozycji zamówienia.
-     */
+
     public void calculateTotalPrice() {
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (LineOfOrder lineOfOrder : lineOfOrders) {
@@ -68,39 +62,25 @@ public class Order implements Observable {
         this.totalPrice = totalPrice;
     }
 
-    /**
-     * Rejestruje obserwatora zamówienia.
-     * @param observer Obserwator do zarejestrowania
-     */
+
     @Override
     public void registerObserver(Observer observer) {
         registeredObservers.add(observer);
     }
 
-    /**
-     * Wyrejestrowuje obserwatora zamówienia.
-     * @param observer Obserwator do wyrejestrowania
-     */
+
     @Override
     public void unregisterObserver(Observer observer) {
         registeredObservers.remove(observer);
     }
 
-    /**
-     * Powiadamia wszystkich zarejestrowanych obserwatorów o zmianie w zamówieniu.
-     */
+
     @Override
     public void notifyObservers() {
         for (Observer observer : registeredObservers) {
             observer.update(this);
         }
     }
-
-    /**
-     * Zmienia status zamówienia i powiadamia o tym fakcie obserwatorów.
-     * @param orderStatus Nowy status zamówienia
-     */
-
 
 
     public void changeOrderStatus(OrderStatus orderStatus) {
@@ -109,22 +89,12 @@ public class Order implements Observable {
     }
 
 
-    // METODY DO TESTÓW
-
-    /**
-     * Ustawia użytkownika jako właściciela zamówienia.
-     * @param user Użytkownik będący właścicielem zamówienia.
-     */
     public void setUser(User user) {
         if (user != null) {
             this.accountHolder = user;
         }
     }
 
-    /**
-     * Zwraca użytkownika będącego właścicielem zamówienia.
-     * @return Użytkownik będący właścicielem zamówienia.
-     */
     public User getUser() {
         if (this.accountHolder != null) {
             return this.accountHolder;
@@ -133,18 +103,12 @@ public class Order implements Observable {
         }
     }
 
-    /**
-     * Ustawia listę pozycji w zamówieniu.
-     * @param lineOfOrders Lista pozycji zamówienia.
-     */
+
     public void setListOfOrders(List<LineOfOrder> lineOfOrders) {
         this.lineOfOrders = lineOfOrders;
     }
 
-    /**
-     * Zwraca adres wysyłki dla zamówienia.
-     * @return Adres wysyłki zamówienia.
-     */
+
     public Address getAddress() {
         if (this.shippingAddress != null) {
             return this.shippingAddress;
@@ -153,10 +117,7 @@ public class Order implements Observable {
         }
     }
 
-    /**
-     * Zwraca listę produktów związanych z zamówieniem.
-     * @return Lista produktów zamówienia.
-     */
+
     public List<Product> getProducts() {
         if (this.lineOfOrders != null) {
             List<Product> products = new ArrayList<>();
@@ -165,7 +126,7 @@ public class Order implements Observable {
             }
             return products;
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 

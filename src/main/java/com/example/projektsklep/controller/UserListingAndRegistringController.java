@@ -30,28 +30,20 @@ public class UserListingAndRegistringController {
         this.userService = userService;
     }
 
-    // Metoda do wyświetlania listy użytkowników z paginacją.
     @GetMapping
     public String listUsers(Model model, @RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "10") int size) {
-        // Ustawienie paginacji z podanymi parametrami.
+
         Pageable pageable = PageRequest.of(page, size);
-        // Pobranie stronnicowanej listy użytkowników za pomocą serwisu.
         Page<UserDTO> userPage = userService.findAllUsers(pageable);
-        // Dodanie listy użytkowników do modelu.
         model.addAttribute("userPage", userPage);
-        // Zwrócenie nazwy widoku listy użytkowników.
         return "user_list";
     }
 
-    // Metoda do wyświetlania formularza dodawania nowego użytkownika.
     @GetMapping("/new")
     public String showNewUserForm(Model model) {
-        // Inicjalizacja nowego DTO użytkownika.
         UserDTO userDTO = userService.initializeNewUserDTO();
-        // Dodanie DTO do modelu, aby można było je wykorzystać w formularzu.
         model.addAttribute("userDTO", userDTO);
-        // Zwrócenie nazwy widoku formularza rejestracji.
         return "user_register";
     }
 

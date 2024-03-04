@@ -72,7 +72,7 @@ public class User {
 
     public void addOrder(Order order) {
         if (orders == null) {
-            orders = new HashSet<>(); // Zainicjuj, jeśli null
+            orders = new HashSet<>();
         }
         orders.add(order);
     }

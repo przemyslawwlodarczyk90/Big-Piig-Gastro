@@ -6,12 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
-/**
- * Klasa RegistrationForm służy jako formularz rejestracyjny w aplikacji ,
- * umożliwiając nowym użytkownikom wprowadzenie swoich danych osobowych oraz adresowych
- * podczas tworzenia nowego konta. Zawiera pola niezbędne do zarejestrowania użytkownika,
- * takie jak imię, nazwisko, email, hasło, adres oraz rolę, którą użytkownik ma pełnić w systemie.
- */
+
 @Data
 @Builder
 public class RegistrationForm {

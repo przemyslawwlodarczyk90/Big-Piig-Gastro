@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 public class LoginController {
 
-    /**
-     * Obsługuje żądanie GET do endpointu "/login", służące do wyświetlenia strony logowania.
-     *
-     * @return Nazwa widoku Thymeleaf (plik HTML), który zawiera formularz logowania.
-     */
+
     @GetMapping("/login")
     public String login() {
         return "login";
