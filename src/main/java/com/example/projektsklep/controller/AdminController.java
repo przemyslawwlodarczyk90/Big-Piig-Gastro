@@ -6,6 +6,9 @@ import com.example.projektsklep.exception.OrderNotFoundException;
 import com.example.projektsklep.model.dto.*;
 import com.example.projektsklep.model.enums.OrderStatus;
 import com.example.projektsklep.service.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +40,7 @@ public class AdminController {
         this.categoryService = categoryService;
         this.productService = productService;
     }
+
 
     @GetMapping("/panel")
     public String showAdminPanel() {
