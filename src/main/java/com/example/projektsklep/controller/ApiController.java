@@ -6,12 +6,14 @@ import com.example.projektsklep.service.ProducerService;
 import com.example.projektsklep.service.CategoryService;
 import com.example.projektsklep.service.ProductService;
 import com.example.projektsklep.service.WeatherService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.security.Principal;
 import java.util.Optional;
@@ -33,6 +35,7 @@ public class ApiController {
         this.weatherService = weatherService;
     }
 
+    @Operation(summary = "Wyświetla listę produktów")
     @GetMapping("/productList")
     public String listProducts(
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
@@ -48,6 +51,8 @@ public class ApiController {
         return "products_list";
     }
 
+
+    @Operation(summary = "Wyświetla formularz wyszukiwania produktów")
     @GetMapping("/searchProduct/form")
     public String showSearchForm(Model model) {
         model.addAttribute("categories", categoryService.findAll());
@@ -55,6 +60,7 @@ public class ApiController {
         return "product_search_form";
     }
 
+    @Operation(summary = "Wyszukuje produkty według kryteriów")
     @GetMapping("/searchProduct")
     public String searchProducts(
             @RequestParam(required = false) String title,
@@ -77,12 +83,16 @@ public class ApiController {
     }
 
 
+
+    @Operation(summary = "Obsługuje wyjątek: Produkt nie znaleziony")
     @ExceptionHandler(ProductNotFoundException.class)
     public String handleProductNotFound(Model model) {
         model.addAttribute("error", "Produkt nie znaleziony");
         return "product_not_found";
     }
 
+
+    @Operation(summary = "Wyświetla szczegóły produktu")
     @GetMapping("/productDetails/{productId}")
     public String productDetails(@PathVariable("productId") Long productId, Model model) {
         ProductDTO productDTO = productService.findProductDTOById(productId);
@@ -91,12 +101,15 @@ public class ApiController {
     }
 
 
+    @Operation(summary = "Wyświetla drzewo kategorii")
     @GetMapping("/categoryTree")
     public String categoryTree() {
         return "categories_tree";
     }
 
 
+
+    @Operation(summary = "Wyświetla informacje o pogodzie")
     @GetMapping("/weather")
     public String getWeather(@RequestParam(name = "city", required = false) String city, Model model, Principal principal) {
         Optional<String> weatherData = weatherService.getWeatherData(city, principal);
@@ -105,9 +118,11 @@ public class ApiController {
         } else {
             model.addAttribute("error", "Nie można znaleźć danych o pogodzie.");
         }
-        return "weather"; // nazwa widoku
+        return "weather";
     }
 
+
+    @Operation(summary = "Obsługuje formularz pogodowy")
     @PostMapping("/weather")
     public String handleWeatherForm(@RequestParam(name = "city") String city) {
         return "redirect:/weather?city=" + city;

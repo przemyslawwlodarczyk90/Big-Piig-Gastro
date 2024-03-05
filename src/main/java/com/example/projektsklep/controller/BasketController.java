@@ -2,6 +2,7 @@ package com.example.projektsklep.controller;
 
 
 import com.example.projektsklep.service.BasketService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class BasketController {
     }
 
 
+    @Operation(summary = "Dodaje produkt do koszyka")
     @PostMapping("/add/{productId}")
     public String addToBasket(@PathVariable Long productId,
                               @RequestParam(value = "quantity", defaultValue = "1") int quantity,

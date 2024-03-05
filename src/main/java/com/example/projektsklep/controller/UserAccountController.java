@@ -6,6 +6,7 @@ import com.example.projektsklep.service.BasketService;
 import com.example.projektsklep.service.OrderService;
 import com.example.projektsklep.service.UserService;
 import com.example.projektsklep.utils.Basket;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,7 @@ public class UserAccountController {
         this.basketService = basketService;
     }
 
+    @Operation(summary = "Pokazuje panel użytkownika")
     @GetMapping("/panel")
     public String showUserPanel(Model model, Authentication authentication) {
         String email = authentication.getName();
@@ -40,7 +42,7 @@ public class UserAccountController {
         return "userPanel";
     }
 
-
+    @Operation(summary = "Wyświetla zamówienia użytkownika")
     @GetMapping("/my_orders")
     public String listUserOrders(Model model, Authentication authentication) {
         String email = authentication.getName();
@@ -49,6 +51,8 @@ public class UserAccountController {
         return "user_orders";
     }
 
+
+    @Operation(summary = "Pokazuje formularz edycji użytkownika")
     @GetMapping("/edit")
     public String showEditForm(Model model, Authentication authentication) {
         String email = authentication.getName();
@@ -57,6 +61,8 @@ public class UserAccountController {
         return "user_edit";
     }
 
+
+    @Operation(summary = "Aktualizuje profil i adres użytkownika")
     @PostMapping("/edit")
     public String updateProfileAndAddress(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
 
@@ -67,6 +73,7 @@ public class UserAccountController {
         return "redirect:/account/panel";
     }
 
+    @Operation(summary = "Pokazuje koszyk użytkownika")
     @GetMapping("/basket")
     public String viewBasket(Model model) {
 
@@ -76,6 +83,7 @@ public class UserAccountController {
     }
 
 
+    @Operation(summary = "Pokazuje formularz realizacji zamówienia")
     @GetMapping("/checkoutBasket")
     public String showCheckoutForm(Model model, Authentication authentication) {
         String username = authentication.getName();
@@ -87,6 +95,7 @@ public class UserAccountController {
     }
 
 
+    @Operation(summary = "Przetwarza realizację zamówienia")
     @PostMapping("/checkoutBasket")
     public String processCheckout(@Valid @ModelAttribute("order") OrderDTO orderDTO, BindingResult result
     ) {
@@ -98,12 +107,14 @@ public class UserAccountController {
     }
 
 
+    @Operation(summary = "Aktualizuje ilość produktu w koszyku")
     @PostMapping("/updateProductQuantity/{productId}")
     public String updateProductQuantity(@PathVariable Long productId, @RequestParam("quantity") int quantity) {
         basketService.updateProductQuantity(productId, quantity);
         return "redirect:/basket";
     }
 
+    @Operation(summary = "Pokazuje stronę sukcesu zamówienia")
     @GetMapping("/orderSuccess")
     public String orderSuccess() {
         return "order_success";

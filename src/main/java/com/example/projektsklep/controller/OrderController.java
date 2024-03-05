@@ -8,6 +8,7 @@ import com.example.projektsklep.model.dto.UserDTO;
 import com.example.projektsklep.service.BasketService;
 import com.example.projektsklep.service.OrderService;
 import com.example.projektsklep.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,8 @@ public class OrderController {
         this.userService = userService;
     }
 
+
+    @Operation(summary = "Wyświetla listę zamówień")
     @GetMapping
     public String listOrders(Model model,
                              @RequestParam(defaultValue = "0") int page,
@@ -49,6 +52,7 @@ public class OrderController {
     }
 
 
+    @Operation(summary = "Szczegóły zamówienia")
     @ExceptionHandler(OrderNotFoundException.class)
     @GetMapping("/{orderId}")
     public String orderDetails(@PathVariable Long orderId, Model model) {
@@ -61,6 +65,8 @@ public class OrderController {
         return orderService.findOrderDTOById(orderId).isPresent() ? "order_details" : "error";
     }
 
+
+    @Operation(summary = "Tworzenie zamówienia z koszyka")
     @PostMapping("/create")
     public String createOrderFromBasket(RedirectAttributes redirectAttributes, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -13,7 +13,7 @@
             <p><strong>Cena:</strong> <span th:text="${product.price}">Cena</span></p>
             <p><strong>Typ:</strong> <span th:text="${product.productType}">Typ Produktu</span></p>
             <div>
-                <a th:href="@{/api/productDetails(productId=${product.id})}" class="btn btn-primary">Szczegóły</a>
+                <a th:href="@{/api/productDetails/{productId}(productId=${product.id})}" class="btn btn-primary">Szczegóły</a>
                 <div sec:authorize="hasAuthority('USER')">
                     <form th:action="@{/basket/add/{productId}(productId=${product.id})}" method="post">
                         <input type="hidden" name="quantity" value="1"/>

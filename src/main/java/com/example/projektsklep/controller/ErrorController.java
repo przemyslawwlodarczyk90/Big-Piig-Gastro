@@ -2,6 +2,7 @@ package com.example.projektsklep.controller;
 
 import com.example.projektsklep.exception.ErrorHandlingException;
 import com.example.projektsklep.exception.ProductNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ public class ErrorController {
     private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
 
-
+    @Operation(summary = "Obsługuje niestandardowe błędy w aplikacji")
     @RequestMapping("/customError")
     public String handleError(HttpServletRequest request, Model model) {
         try {
@@ -44,6 +45,7 @@ public class ErrorController {
         }
     }
 
+    @Operation(summary = "Obsługuje wyjątek 'ProductNotFoundException'")
     @ExceptionHandler(ProductNotFoundException.class)
     public String handleProductNotFound(Model model) {
         model.addAttribute("error", "Produkt nie znaleziony");

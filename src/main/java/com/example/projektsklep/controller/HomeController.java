@@ -1,6 +1,7 @@
 package com.example.projektsklep.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +19,7 @@ public class HomeController {
 
 
 
-
+    @Operation(summary = "Wyświetla stronę główną dla zalogowanych i niezalogowanych użytkowników, różnicując widok na podstawie ról użytkownika.")
     @GetMapping("/home")
     public String showHomePage(Model model, Principal principal) {
         boolean isAdmin = false;

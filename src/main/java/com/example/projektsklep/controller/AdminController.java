@@ -7,8 +7,6 @@ import com.example.projektsklep.model.dto.*;
 import com.example.projektsklep.model.enums.OrderStatus;
 import com.example.projektsklep.service.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,18 +40,19 @@ public class AdminController {
     }
 
 
+    @Operation(summary = "Wyświetla panel administratora")
     @GetMapping("/panel")
     public String showAdminPanel() {
         return "adminPanel";
     }
 
-
+    @Operation(summary = "Formularz wyszukiwania użytkownika")
     @GetMapping("/user_search")
     public String showUserSearchForm() {
         return "admin_user_search";
     }
 
-
+    @Operation(summary = "Wyświetla listę zamówień użytkownika na podstawie nazwiska")
     @PostMapping("/user_search")
     public String showUserOrders(@RequestParam String lastName, Model model) {
         List<UserDTO> users = userService.findUsersByLastName(lastName);
@@ -61,21 +60,25 @@ public class AdminController {
         return "admin_user_list";
     }
 
-
+    @Operation(summary = "Szczegóły użytkownika")
     @GetMapping("/user_details/{userId}")
     public String userDetails(@PathVariable("userId") Long userId, Model model) {
         Optional<UserDTO> userOptional = userService.findUserById(userId);
-        userOptional.ifPresent(user -> model.addAttribute("user", user));
-        return userOptional.isPresent() ? "user_details" : "redirect:/admin/user_search";
+        if(userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+            return "user_details";
+        } else {
+            return "redirect:/admin/user_search";
+        }
     }
-
+    @Operation(summary = "Wyświetla formularz dodawania autora")
     @GetMapping("/author")
     public String showAuthorForm(Model model) {
         model.addAttribute("author", new ProducerDTO(null, ""));
         return "admin_producer_form";
     }
 
-
+    @Operation(summary = "Zapisuje autora i przekierowuje do listy autorów")
     @PostMapping("/author")
     public String saveAuthor(@Valid @ModelAttribute("author") ProducerDTO authorDTO, BindingResult result) {
         if (!result.hasErrors()) {
@@ -86,7 +89,7 @@ public class AdminController {
         }
     }
 
-
+    @Operation(summary = "Wyświetla listę autorów")
     @GetMapping("/authors")
     public String listAuthors(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -95,14 +98,14 @@ public class AdminController {
         return "admin_producers_list";
     }
 
-
+    @Operation(summary = "Wyświetla formularz dodania produktu")
     @GetMapping("/addProduct")
     public String showAddProductForm(Model model) {
         productService.prepareAddProductFormModel(model);
         return "admin_add_product";
     }
 
-
+    @Operation(summary = "Wyświetla formularz dodania produktu")
     @PostMapping("/addProduct")
     public String addProduct(@ModelAttribute ProductDTO productDTO, Model model) {
         productService.saveProductDTO(productDTO);
@@ -111,7 +114,7 @@ public class AdminController {
         return "admin_add_product";
     }
 
-
+    @Operation(summary = "Wyświetla zamówienia użytkownika")
     @GetMapping("/user_orders/{userId}")
     public String listUserOrders(@PathVariable Long userId, Model model) {
         List<OrderDTO> orders = orderService.findAllOrdersByUserId(userId);
@@ -120,6 +123,7 @@ public class AdminController {
     }
 
 
+    @Operation(summary = "Wyświetla zamówienia według statusu")
     @GetMapping("/ordersByStatus")
     public String getOrdersByStatus(@RequestParam(required = false) OrderStatus orderStatus, Model model) {
         orderService.prepareOrdersByStatusModel(orderStatus, model);
@@ -127,12 +131,14 @@ public class AdminController {
     }
 
 
+    @Operation(summary = "Wyświetla formularz dodawania kategorii")
     @GetMapping("/addCategory")
     public String showAddForm(Model model) {
         categoryService.prepareAddCategoryModel(model);
         return "category_add";
     }
 
+    @Operation(summary = "Dodaje kategorię i przekierowuje do listy kategorii")
     @PostMapping("/addCategory")
     public String addCategory(@ModelAttribute CategoryDTO categoryDTO) {
         try {
@@ -143,6 +149,7 @@ public class AdminController {
         }
     }
 
+    @Operation(summary = "Wyświetla formularz edycji kategorii")
     @GetMapping("/editCategory/{id}")
     public String editCategoryForm(@PathVariable Long id, Model model) {
         CategoryDTO categoryDTO = categoryService.getCategoryDTOById(id);
@@ -150,13 +157,14 @@ public class AdminController {
         return "category_edit";
     }
 
-
+    @Operation(summary = "Aktualizuje kategorię i przekierowuje do listy kategorii")
     @PostMapping("/editCategory/{id}")
     public String editCategory(@PathVariable Long id, @ModelAttribute("category") CategoryDTO categoryDTO) {
         categoryService.updateCategoryDTO(id, categoryDTO);
         return "redirect:/categories";
     }
 
+    @Operation(summary = "Usuwa kategorię i przekierowuje do listy kategorii")
     @PostMapping("/deleteCategory/{id}")
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
@@ -164,6 +172,7 @@ public class AdminController {
     }
 
 
+    @Operation(summary = "Wyświetla formularz edycji statusu zamówienia")
     @GetMapping("/editOrderStatus/{orderId}")
     public String showEditOrderForm(@PathVariable Long orderId, Model model) {
         try {
@@ -175,6 +184,7 @@ public class AdminController {
         }
     }
 
+    @Operation(summary = "Aktualizuje status zamówienia i przekierowuje do listy zamówień według statusu")
     @PostMapping("/editOrderStatus/{orderId}")
     public String updateOrderStatus(@PathVariable Long orderId, @ModelAttribute("order") OrderDTO orderDTO) {
         orderService.updateOrderStatus(orderId, orderDTO.orderStatus());
@@ -182,16 +192,18 @@ public class AdminController {
     }
 
 
+    @Operation(summary = "Wyszukuje użytkowników po nazwisku-formularz")
     @GetMapping("/searchUser")
-    public String searchUsersByLastName(@RequestParam String lastName, Model model) {
+    public String searchUsersByLastNameForm(@RequestParam String lastName, Model model) {
         List<UserDTO> users = userService.findUsersByLastName(lastName);
         model.addAttribute("users", users);
         return "admin_user_list";
     }
 
 
+    @Operation(summary = "Wyszukuje użytkowników po nazwisku-formularz")
     @PostMapping("/searchUser")
-    public String searchUsersByName(@RequestParam String name, Model model) {
+    public String searchUsersByLastName(@RequestParam String name, Model model) {
 
         List<UserDTO> users = userService.findUsersByLastName(name);
         model.addAttribute("users", users);
