@@ -42,19 +42,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(new AntPathRequestMatcher("/home")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/static/")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/users")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/categories")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/orders/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("ADMIN")
-                        .requestMatchers(new AntPathRequestMatcher("/account/**")).hasAuthority("USER")
-                        .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("api/productDetails/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/users/new")).permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/admin/**", "/swagger-ui/index.html#/**").hasAuthority("ADMIN")
+                        .requestMatchers("/account/**").hasAuthority("USER")
+                        .requestMatchers("/**").permitAll())
                 .formLogin((form) -> form
                         .loginPage("/user/login")
                         .loginProcessingUrl("/user/login")
