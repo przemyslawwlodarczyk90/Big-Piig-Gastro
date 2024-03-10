@@ -8,7 +8,7 @@ class UserNotFoundExceptionTest {
 
     @Test
     void testConstructorWithMessage() {
-        String expectedMessage = "User with ID 123 not found"; // Example message
+        String expectedMessage = "User with ID 123 not found";
         UserNotFoundException exception = new UserNotFoundException(expectedMessage);
 
         assertEquals(expectedMessage, exception.getMessage());

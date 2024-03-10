@@ -13,8 +13,8 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = NONE) // Użyj rzeczywistej bazy danych, nie wbudowanej
-public class AddressRepositoryIntegrationTest {
+@AutoConfigureTestDatabase(replace = NONE)
+ class AddressRepositoryIntegrationTest {
 
     @Autowired
     private AddressRepository addressRepository;
@@ -26,7 +26,7 @@ public class AddressRepositoryIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        // Utworzenie przykładowego adresu
+
         testAddress = new Address(null, "Testowa", "Testowe", "00-000", "Testoland");
         entityManager.persist(testAddress);
         entityManager.flush();
@@ -34,38 +34,35 @@ public class AddressRepositoryIntegrationTest {
 
     @AfterEach
     public void tearDown() {
-        // Opcjonalnie, wyczyść bazę danych po każdym teście
+
         addressRepository.deleteAll();
     }
 
     @Test
-    public void whenFindById_thenReturnAddress() {
-        // Kiedy
+     void whenFindById_thenReturnAddress() {
+
         Address found = addressRepository.findById(testAddress.getId()).orElse(null);
 
-        // Wtedy
         assertNotNull(found);
         assertEquals(testAddress.getStreet(), found.getStreet());
     }
 
     @Test
-    public void whenCreateAddress_thenAddressIsInDatabase() {
-        // Kiedy
+     void whenCreateAddress_thenAddressIsInDatabase() {
+
         Address newAddress = new Address(null, "Nowa", "Nowe Miasto", "11-111", "Nowoland");
         addressRepository.save(newAddress);
 
-        // Wtedy
         Address found = entityManager.find(Address.class, newAddress.getId());
         assertNotNull(found);
         assertEquals(newAddress.getStreet(), found.getStreet());
     }
 
     @Test
-    public void whenDeleteAddress_thenAddressIsNotInDatabase() {
-        // Kiedy
+     void whenDeleteAddress_thenAddressIsNotInDatabase() {
+
         addressRepository.deleteById(testAddress.getId());
 
-        // Wtedy
         Address found = entityManager.find(Address.class, testAddress.getId());
         assertNull(found);
     }

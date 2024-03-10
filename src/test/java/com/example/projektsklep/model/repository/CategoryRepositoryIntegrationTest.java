@@ -14,14 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class CategoryRepositoryIntegrationTest {
+ class CategoryRepositoryIntegrationTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
-        // Przygotowanie bazy danych przed każdym testem
+
         categoryRepository.deleteAll();
 
         Category electronics = new Category("Electronics");
@@ -33,23 +33,19 @@ public class CategoryRepositoryIntegrationTest {
 
     @Test
     void shouldFindCategoryById() {
-        // Utworzenie nowej kategorii i zapisanie jej
-        Category savedCategory = categoryRepository.save(new Category("Games"));
+        Category savedCategory = categoryRepository.save(new Category("Home"));
 
-        // Pobranie kategorii po ID
         Optional<Category> foundCategory = categoryRepository.findById(savedCategory.getId());
 
-        // Weryfikacja
         assertThat(foundCategory).isPresent();
-        assertThat(foundCategory.get().getName()).isEqualTo("Games");
+        assertThat(foundCategory.get().getName()).isEqualTo("Home");
     }
 
     @Test
     void shouldListAllCategories() {
-        // Pobranie wszystkich kategorii
+
         List<Category> categories = categoryRepository.findAll();
 
-        // Weryfikacja, że lista zawiera przynajmniej dwie kategorie
         assertThat(categories).hasSizeGreaterThanOrEqualTo(2);
     }
 }

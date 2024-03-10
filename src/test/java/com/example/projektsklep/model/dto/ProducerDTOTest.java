@@ -26,11 +26,10 @@ class ProducerDTOTest {
 
     @Test
     void testNameTooLong() {
-        StringBuilder longName = new StringBuilder();
-        longName.append("a".repeat(51));
+        String longName = "a".repeat(51);
 
         ProducerDTO producerDTO = ProducerDTO.builder()
-                .name(longName.toString())
+                .name(longName)
                 .build();
 
         assertFalse(isNameValid(producerDTO.name()));

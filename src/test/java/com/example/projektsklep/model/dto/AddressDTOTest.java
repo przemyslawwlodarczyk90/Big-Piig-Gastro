@@ -3,10 +3,10 @@ package com.example.projektsklep.model.dto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-public class AddressDTOTest {
+ class AddressDTOTest {
 
     @Test
-    public void testConstructor() {
+     void testConstructor() {
         Long id = 1L;
         String street = "Główna 12";
         String city = "Warszawa";

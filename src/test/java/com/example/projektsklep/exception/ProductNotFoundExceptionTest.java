@@ -8,7 +8,7 @@ class ProductNotFoundExceptionTest {
 
     @Test
     void testConstructorWithMessage() {
-        String expectedMessage = "Product with ID 123 not found"; // Example message
+        String expectedMessage = "Product with ID 123 not found";
         ProductNotFoundException exception = new ProductNotFoundException(expectedMessage);
 
         assertEquals(expectedMessage, exception.getMessage());

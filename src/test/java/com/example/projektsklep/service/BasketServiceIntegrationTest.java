@@ -3,11 +3,9 @@ package com.example.projektsklep.service;
 import com.example.projektsklep.model.dto.AddressDTO;
 import com.example.projektsklep.model.dto.OrderDTO;
 import com.example.projektsklep.model.dto.UserDTO;
-import com.example.projektsklep.model.entities.order.LineOfOrder;
 import com.example.projektsklep.model.entities.product.Product;
 import com.example.projektsklep.model.repository.OrderRepository;
 import com.example.projektsklep.model.repository.ProductRepository;
-import com.example.projektsklep.utils.Basket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,52 +65,42 @@ public class BasketServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        // Przygotowanie danych testowych dla Product
+
         sampleProduct = new Product();
         sampleProduct.setId(sampleProductId);
         sampleProduct.setTitle("Sample Product");
         sampleProduct.setPrice(BigDecimal.valueOf(100));
         productRepository.save(sampleProduct);
 
-        // Konfiguracja mockowania UserService
+
         AddressDTO mockAddress = AddressDTO.builder().id(1L).street("TestStreet").city("TestCity").postalCode("12345").country("TestCountry").build();
         UserDTO mockUserDTO = new UserDTO(1L, "Test", "User", "test@example.com", "passwordHash", mockAddress, null);
         when(userService.findUserById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(mockUserDTO));
     }
 
     @Test
-    public void testAddProductToBasketAndClear() {
-        // Dodajemy produkt do koszyka
+     void testAddProductToBasketAndClear() {
+
         basketService.addProductToBasket(sampleProductId, quantity);
 
-        // Prosta weryfikacja, że metoda addProductToBasket została wywołana
-        // Uwaga: to nie sprawdza, czy produkt rzeczywiście został dodany do koszyka
-        assertNotNull(basketService.getCurrentBasket(), "Koszyk nie powinien być null po dodaniu produktu.");
+        assertNotNull(basketService.getCurrentBasket(), "The shopping cart should not be null after adding a product.");
 
-        // Wywołanie czyszczenia koszyka
         basketService.clear();
 
-        // Uproszczona weryfikacja, że metoda clear() została wywołana
-        // Uwaga: to nie weryfikuje, czy koszyk jest pusty
-        assertNotNull(basketService.getCurrentBasket(), "Koszyk nie powinien być null po wyczyszczeniu.");
+        assertNotNull(basketService.getCurrentBasket(), "The shopping cart should not be null after clearing.");
     }
 
-
     @Test
-    public void testPlaceOrder() {
-        // Dodajemy produkt do koszyka
+     void testPlaceOrder() {
+
         basketService.addProductToBasket(sampleProductId, quantity);
 
-        // Składanie zamówienia
         OrderDTO orderDTO = basketService.prepareOrderForCheckout(1L);
         basketService.placeOrder(orderDTO);
 
-        // Sprawdzenie, czy lista zamówień nie jest pusta (zakładamy, że zamówienie zostało utworzone)
-        assertFalse(orderRepository.findAll().isEmpty(), "Lista zamówień nie powinna być pusta.");
+        assertFalse(orderRepository.findAll().isEmpty(), "The order list should not be empty.");
 
-        // Sprawdzenie, czy utworzone zamówienie ma przypisaną jakąkolwiek wartość totalPrice
-        assertNotNull(orderRepository.findAll().get(0).getTotalPrice(), "Utworzone zamówienie powinno mieć przypisaną wartość totalPrice.");
+        assertNotNull(orderRepository.findAll().get(0).getTotalPrice(), "The created order should have a totalPrice value assigned to it.");
     }
-
 
 }

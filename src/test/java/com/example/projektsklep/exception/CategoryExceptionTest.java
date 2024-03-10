@@ -1,12 +1,13 @@
 package com.example.projektsklep.exception;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CategoryExceptionTest {
+class CategoryExceptionTest {
 
     @Test
-    public void testConstructorWithMessageAndCause() {
+    void testConstructorWithMessageAndCause() {
         String errorMessage = "Error in operation";
         Throwable rootCause = new NullPointerException("Category is null");
 
@@ -15,7 +16,6 @@ public class CategoryExceptionTest {
         assertEquals(errorMessage, exception.getMessage());
         assertEquals(rootCause, exception.getCause());
     }
-
 
 
 }

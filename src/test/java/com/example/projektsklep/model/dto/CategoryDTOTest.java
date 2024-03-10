@@ -3,10 +3,10 @@ package com.example.projektsklep.model.dto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-public class CategoryDTOTest {
+ class CategoryDTOTest {
 
     @Test
-    public void testConstructor() {
+     void testConstructor() {
         Long id = 1L;
         String name = "Elektronika";
         Long parentCategoryId = 2L;

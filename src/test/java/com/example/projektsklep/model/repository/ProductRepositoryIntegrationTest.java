@@ -4,7 +4,6 @@ import com.example.projektsklep.model.entities.product.Category;
 import com.example.projektsklep.model.entities.product.Producer;
 import com.example.projektsklep.model.entities.product.Product;
 import com.example.projektsklep.model.enums.ProductType;
-import com.example.projektsklep.model.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,14 +15,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class ProductRepositoryIntegrationTest {
+ class ProductRepositoryIntegrationTest {
 
     @Autowired
     private ProductRepository productRepository;
@@ -32,18 +30,18 @@ public class ProductRepositoryIntegrationTest {
     private CategoryRepository categoryRepository;
 
     private Product sampleProduct;
-    private Producer sampleProducer; // Załóżmy, że taki obiekt istnieje w bazie danych
-    private Category sampleCategory; // Załóżmy, że taki obiekt istnieje w bazie danych
+    private Producer sampleProducer;
+    private Category sampleCategory;
 
     @BeforeEach
     public void setup() {
-        // Załóżmy, że sampleProducer i sampleCategory zostały już utworzone w bazie danych
+
         sampleProduct = new Product();
         sampleProduct.setTitle("Testowy produkt");
         sampleProduct.setDescription("Opis testowego produktu");
         sampleProduct.setPrice(BigDecimal.valueOf(99.99));
-        sampleProduct.setAuthor(sampleProducer); // Ustaw odpowiedni sampleProducer
-        sampleProduct.setCategory(sampleCategory); // Ustaw odpowiedni sampleCategory
+        sampleProduct.setAuthor(sampleProducer);
+        sampleProduct.setCategory(sampleCategory);
         sampleProduct.setProductType(ProductType.KITCHEN_EQUIPMENT);
         sampleProduct.setPublished(true);
         sampleProduct.setDateCreated(LocalDate.now());
@@ -57,46 +55,45 @@ public class ProductRepositoryIntegrationTest {
     }
 
     @Test
-    public void testFindAllPageable() {
+     void testFindAllPageable() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> products = productRepository.findAll(pageable);
 
-        assertFalse(products.isEmpty(), "Strona produktów nie powinna być pusta.");
+        assertFalse(products.isEmpty(), "The products page should not be empty.");
     }
 
     @Test
-    public void testFindByTitleContainingIgnoreCase() {
+     void testFindByTitleContainingIgnoreCase() {
         String searchTitle = "testowy";
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> products = productRepository.findByTitleContainingIgnoreCase(searchTitle, pageable);
 
-        assertFalse(products.isEmpty(), "Strona produktów zawierających tytuł nie powinna być pusta.");
+        assertFalse(products.isEmpty(), "The products page containing the title should not be blank.");
     }
 
     @Test
     public void testFindByCategoryId() {
-        // Przygotowanie
-        Category category = new Category(); // Utwórz odpowiednią kategorię
+
+        Category category = new Category();
         category.setName("Testowa Kategoria");
-        // Zakładając, że istnieje metoda save w repozytorium kategorii
-        category = categoryRepository.save(category); // Zapisz kategorię, aby miała przydzielone ID
+
+        category = categoryRepository.save(category);
 
         Product product = new Product("Testowy produkt", BigDecimal.valueOf(99.99));
-        product.setCategory(category); // Ustaw kategorię produktu
-        productRepository.save(product); // Zapisz produkt
+        product.setCategory(category);
+        productRepository.save(product);
 
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> productsPage = productRepository.findByCategoryId(category.getId(), pageable);
 
-        // Weryfikacja
-        assertFalse(productsPage.isEmpty(), "Strona produktów powinna zawierać produkty z danej kategorii.");
+        assertFalse(productsPage.isEmpty(), "The products page should contain products from the category.");
     }
     @Test
     public void testDeleteById() {
-        Long productId = productRepository.findAll().get(0).getId(); // Pobierz ID pierwszego zapisanego produktu
+        Long productId = productRepository.findAll().get(0).getId();
         productRepository.deleteById(productId);
 
         Optional<Product> deletedProduct = productRepository.findById(productId);
-        assertTrue(deletedProduct.isEmpty(), "Produkt powinien zostać usunięty.");
+        assertTrue(deletedProduct.isEmpty(), "The product should be removed.");
     }
 }

@@ -41,7 +41,7 @@ public class OrderRepositoryIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Czyszczenie bazy danych i przygotowanie danych testowych
+
         orderRepository.deleteAll();
         Order order = new Order();
         order.setOrderStatus(OrderStatus.NEW_ORDER);
@@ -51,13 +51,13 @@ public class OrderRepositoryIntegrationTest {
     @Test
     void testFindByOrderStatus() {
         List<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.NEW_ORDER);
-        assertFalse(orders.isEmpty(), "Lista zamówień nie powinna być pusta.");
+        assertFalse(orders.isEmpty(), "The order list should not be empty.");
     }
 
     @Test
     void testFindAllPageable() {
         var pageable = PageRequest.of(0, 10);
         var pageResult = orderRepository.findAll(pageable);
-        assertFalse(pageResult.isEmpty(), "Stronicowany wynik nie powinien być pusty.");
+        assertFalse(pageResult.isEmpty(), "The paged result should not be empty.");
     }
 }

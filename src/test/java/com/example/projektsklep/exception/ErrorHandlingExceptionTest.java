@@ -1,12 +1,13 @@
 package com.example.projektsklep.exception;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ErrorHandlingExceptionTest {
+class ErrorHandlingExceptionTest {
 
     @Test
-    public void testConstructorWithMessageAndStatusCode() {
+    void testConstructorWithMessageAndStatusCode() {
         int errorCode = 400;
         String errorMessage = "Bad request";
 
@@ -17,7 +18,7 @@ public class ErrorHandlingExceptionTest {
     }
 
     @Test
-    public void testErrorHandlingExceptionExtendsRuntimeException() {
+    void testErrorHandlingExceptionExtendsRuntimeException() {
         ErrorHandlingException exception = new ErrorHandlingException(404, "Not found");
         assertTrue(exception instanceof RuntimeException);
     }

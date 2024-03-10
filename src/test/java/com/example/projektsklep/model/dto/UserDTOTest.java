@@ -1,6 +1,7 @@
 package com.example.projektsklep.model.dto;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,4 @@ class UserDTOTest {
                 () -> assertEquals(expectedRoles, userDTO.roles(), "Roles should match the provided value")
         );
     }
-
-    // You can add more tests to validate specific behaviors or logic you've implemented in the UserDTO
 }

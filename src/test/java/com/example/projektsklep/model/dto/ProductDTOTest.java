@@ -51,5 +51,5 @@ class ProductDTOTest {
         assertTrue(productDTO.price().compareTo(BigDecimal.ZERO) < 0, "Price should be negative");
     }
 
-    // Additional tests can be added for other constraints and scenarios.
+
 }

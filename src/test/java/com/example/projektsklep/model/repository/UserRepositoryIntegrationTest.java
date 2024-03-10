@@ -1,7 +1,6 @@
 package com.example.projektsklep.model.repository;
 
 import com.example.projektsklep.model.entities.user.User;
-import com.example.projektsklep.model.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class UserRepositoryIntegrationTest {
+ class UserRepositoryIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
-        // Przykładowe polskie dane testowe
         User janKowalski = new User();
         janKowalski.setEmail("jankowalski@example.com");
         janKowalski.setFirstName("Jan");
@@ -40,64 +38,63 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    public void testFindByEmail() {
+     void testFindByEmail() {
         String email = "jankowalski@example.com";
         User foundUser = userRepository.findByEmail(email).orElse(null);
-        assertNotNull(foundUser, "Użytkownik powinien zostać znaleziony po adresie email.");
-        assertEquals("Jan", foundUser.getFirstName(), "Imię znalezionego użytkownika powinno być Jan.");
+        assertNotNull(foundUser, "The user should be found by email address.");
+        assertEquals("Jan", foundUser.getFirstName(), "The name of the user found should be Jan.");
     }
 
     @Test
-    public void testFindByLastNameIgnoreCaseContaining() {
+     void testFindByLastNameIgnoreCaseContaining() {
         List<User> users = userRepository.findByLastNameIgnoreCaseContaining("kow");
-        assertFalse(users.isEmpty(), "Powinien zostać znaleziony przynajmniej jeden użytkownik.");
-        assertTrue(users.stream().anyMatch(u -> u.getLastName().equalsIgnoreCase("Kowalski")), "Znaleziony użytkownik powinien mieć nazwisko Kowalski.");
+        assertFalse(users.isEmpty(), "At least one user should be found.");
+        assertTrue(users.stream().anyMatch(u -> u.getLastName().equalsIgnoreCase("Kowalski")), "The user found should have the name Kowalski.");
     }
 
     @Test
-    public void testAddAndDeleteUser() {
+     void testAddAndDeleteUser() {
         User newUser = new User();
         newUser.setEmail("krzysztofsikora@example.com");
         newUser.setFirstName("Krzysztof");
         newUser.setLastName("Sikora");
         User savedUser = userRepository.save(newUser);
 
-        assertNotNull(savedUser.getId(), "Id zapisanego użytkownika nie powinno być null");
+        assertNotNull(savedUser.getId(), "Id of saved user should not be null.");
 
         userRepository.deleteById(savedUser.getId());
 
-        assertFalse(userRepository.findById(savedUser.getId()).isPresent(), "Użytkownik powinien zostać usunięty");
+        assertFalse(userRepository.findById(savedUser.getId()).isPresent(), "The user should be removed.");
     }
 
 
     @Test
-    public void testDeleteByIdWithNonExistingId() {
+     void testDeleteByIdWithNonExistingId() {
         Long nonExistingId = 999L;
-        assertDoesNotThrow(() -> userRepository.deleteById(nonExistingId), "Usunięcie nieistniejącego użytkownika nie powinno spowodować błędu");
+        assertDoesNotThrow(() -> userRepository.deleteById(nonExistingId), "Deleting a non-existent user should not cause an error");
     }
-
     @Test
-    public void testSaveUserWithUniqueEmail() {
+     void testSaveUserWithUniqueEmail() {
         User newUser = new User();
         newUser.setEmail("uniqueemail@example.com");
         newUser.setFirstName("Unique");
         newUser.setLastName("Email");
         User savedUser = userRepository.save(newUser);
 
-        assertNotNull(savedUser, "Zapisany użytkownik nie powinien być null");
-        assertNotNull(savedUser.getId(), "Id zapisanego użytkownika nie powinno być null");
-        assertEquals("uniqueemail@example.com", savedUser.getEmail(), "Email zapisanego użytkownika powinien być uniqueemail@example.com");
+        assertNotNull(savedUser, "The saved user should not be null.");
+        assertNotNull(savedUser.getId(), "Id of saved user should not be null.");
+        assertEquals("uniqueemail@example.com", savedUser.getEmail(), "Email of enrolled user should be uniqueemail@example.com");
     }
 
     @Test
-    public void testUpdateUserDetails() {
-        // Załóżmy, że annaNowak ma ID 2
+     void testUpdateUserDetails() {
+
         Long userId = 2L;
-        User user = userRepository.findById(userId).orElseThrow(() -> new AssertionError("Użytkownik powinien istnieć"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new AssertionError("The user should exist."));
         user.setFirstName("AnnaUpdated");
         userRepository.save(user);
 
-        User updatedUser = userRepository.findById(userId).orElseThrow(() -> new AssertionError("Użytkownik powinien istnieć"));
-        assertEquals("AnnaUpdated", updatedUser.getFirstName(), "Zaktualizowane imię użytkownika powinno być AnnaUpdated");
+        User updatedUser = userRepository.findById(userId).orElseThrow(() -> new AssertionError("The user should exist"));
+        assertEquals("AnnaUpdated", updatedUser.getFirstName(), "The updated user name should be AnnaUpdated");
     }
 }

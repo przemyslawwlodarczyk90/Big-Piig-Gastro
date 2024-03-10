@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
 
-public class LineOfOrderDTOTest {
+ class LineOfOrderDTOTest {
 
     @Test
-    public void testConstructorWithNullValues() {
+     void testConstructorWithNullValues() {
         LineOfOrderDTO lineOfOrderDTO = new LineOfOrderDTO(null, null, null, null);
 
         Assertions.assertNull(lineOfOrderDTO.id());
@@ -18,11 +18,11 @@ public class LineOfOrderDTOTest {
     }
 
     @Test
-    public void testConstructorWithValues() {
+     void testConstructorWithValues() {
         Long id = 1L;
         Long productId = 2L;
         Integer quantity = 3;
-        BigDecimal unitPrice = new BigDecimal(10.50);
+        BigDecimal unitPrice = new BigDecimal("10.50");
 
         LineOfOrderDTO lineOfOrderDTO = new LineOfOrderDTO(id, productId, quantity, unitPrice);
 
@@ -33,14 +33,14 @@ public class LineOfOrderDTOTest {
     }
 
     @Test
-    public void testQuantityDefaultHandling() {
-        LineOfOrderDTO lineOfOrderDTO = new LineOfOrderDTO(1L, 2L, null, new BigDecimal(10.50));
+     void testQuantityDefaultHandling() {
+        LineOfOrderDTO lineOfOrderDTO = new LineOfOrderDTO(1L, 2L, null, new BigDecimal("10.50"));
 
         Assertions.assertEquals(0, lineOfOrderDTO.quantity());
     }
 
     @Test
-    public void testUnitPriceDefaultHandling() {
+     void testUnitPriceDefaultHandling() {
         LineOfOrderDTO lineOfOrderDTO = new LineOfOrderDTO(1L, 2L, 3, null);
 
         Assertions.assertEquals(BigDecimal.ZERO, lineOfOrderDTO.unitPrice());

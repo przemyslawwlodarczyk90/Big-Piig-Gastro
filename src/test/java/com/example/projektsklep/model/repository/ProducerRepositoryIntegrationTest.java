@@ -17,17 +17,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ProducerRepositoryIntegrationTest {
+ class ProducerRepositoryIntegrationTest {
 
     @Autowired
     private ProducerRepository producerRepository;
 
     @BeforeEach
     public void setup() {
-        // Wyczyszczenie bazy danych przed każdym testem
+
         producerRepository.deleteAll();
 
-        // Przygotowanie danych testowych
+
         Producer producer1 = new Producer("Producer1");
         Producer producer2 = new Producer("Producer2");
         producerRepository.save(producer1);
@@ -35,23 +35,20 @@ public class ProducerRepositoryIntegrationTest {
     }
 
     @Test
-    public void testFindByName() {
-        // Próba znalezienia producenta po nazwie
+     void testFindByName() {
+
         Optional<Producer> foundProducer = producerRepository.findByName("Producer1");
 
-        // Weryfikacja, że producent został znaleziony
-        assertTrue(foundProducer.isPresent(), "Producent powinien zostać znaleziony.");
+        assertTrue(foundProducer.isPresent(), "The producer should be found.");
     }
 
     @Test
-    public void testFindAllWithPageable() {
-        // Utworzenie obiektu Pageable do stronicowania
+     void testFindAllWithPageable() {
+
         Pageable pageable = PageRequest.of(0, 1);
 
-        // Pobranie stronicowanej listy producentów
         Page<Producer> producersPage = producerRepository.findAll(pageable);
 
-        // Weryfikacja, że strona zawiera producentów
-        assertFalse(producersPage.isEmpty(), "Strona producentów nie powinna być pusta.");
+        assertFalse(producersPage.isEmpty(), "he producer's page should not be empty.");
     }
 }

@@ -8,7 +8,7 @@ class UserAlreadyExistsExceptionTest {
 
     @Test
     void testConstructorWithMessage() {
-        String expectedMessage = "User with email 'example@email.com' already exists"; // Example message
+        String expectedMessage = "User with email 'example@email.com' already exists";
         UserAlreadyExistsException exception = new UserAlreadyExistsException(expectedMessage);
 
         assertEquals(expectedMessage, exception.getMessage());

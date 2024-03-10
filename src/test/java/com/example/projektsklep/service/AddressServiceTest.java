@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Testy jednostkowe dla klasy AddressService, sprawdzające konwersję DTO do encji.
- */
+
 class AddressServiceTest {
 
     private AddressService addressService;
@@ -21,7 +19,7 @@ class AddressServiceTest {
 
     @Test
     void testConvertToEntity_ShouldConvertAddressDTOToEntity() {
-        // Given
+
         AddressDTO addressDTO = AddressDTO.builder()
                 .id(1L)
                 .street("Test Street")
@@ -30,10 +28,10 @@ class AddressServiceTest {
                 .country("Test Country")
                 .build();
 
-        // When
+
         Address address = addressService.convertToEntity(addressDTO);
 
-        // Then
+
         assertEquals(addressDTO.id(), address.getId());
         assertEquals(addressDTO.street(), address.getStreet());
         assertEquals(addressDTO.city(), address.getCity());

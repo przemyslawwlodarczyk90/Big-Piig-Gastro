@@ -8,7 +8,7 @@ class InvalidUserDataExceptionTest {
 
     @Test
     void testConstructorWithMessage() {
-        String expectedMessage = "Invalid email address"; // Example message
+        String expectedMessage = "Invalid email address";
         InvalidUserDataException exception = new InvalidUserDataException(expectedMessage);
 
         assertEquals(expectedMessage, exception.getMessage());
