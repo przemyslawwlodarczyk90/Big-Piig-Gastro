@@ -15,6 +15,7 @@ public class ErrorHandlingException extends RuntimeException {
         return statusCode;
     }
 
+    @Override
     public String getMessage() {
         return message;
     }

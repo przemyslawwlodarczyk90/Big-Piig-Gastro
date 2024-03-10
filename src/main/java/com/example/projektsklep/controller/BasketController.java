@@ -2,7 +2,7 @@ package com.example.projektsklep.controller;
 
 
 import com.example.projektsklep.service.BasketService;
-import com.example.projektsklep.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +14,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BasketController {
 
     private final BasketService basketService;
-    private final ProductService productService;
 
-    public BasketController(BasketService basketService, ProductService productService) {
+
+
+    public BasketController(BasketService basketService) {
         this.basketService = basketService;
-        this.productService = productService;
+
     }
 
+
+    @Operation(summary = "Dodaje produkt do koszyka")
     @PostMapping("/add/{productId}")
     public String addToBasket(@PathVariable Long productId,
                               @RequestParam(value = "quantity", defaultValue = "1") int quantity,
@@ -37,8 +40,6 @@ public class BasketController {
         return "redirect:" + referer;
     }
 
-
 }
-
 
 

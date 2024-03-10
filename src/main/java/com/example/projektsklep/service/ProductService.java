@@ -31,7 +31,6 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
-    // W ProductService
     public Page<ProductDTO> findAllProductDTOs(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .map(this::convertToProductDTO);
@@ -49,15 +48,9 @@ public class ProductService {
         return convertToProductDTO(savedProduct);
     }
 
-    public Product findProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
-    }
-
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-    }
 
     private ProductDTO convertToProductDTO(Product product) {
+
         return ProductDTO.builder()
                 .id(product.getId())
                 .title(product.getTitle())
@@ -79,7 +72,6 @@ public class ProductService {
         product.setPrice(productDTO.price());
         product.setProductType(productDTO.productType());
 
-        // Handle authorId and categoryId
         if (productDTO.authorId() != null) {
             Producer author = new Producer();
             author.setId(productDTO.authorId());
@@ -99,22 +91,9 @@ public class ProductService {
         return product;
     }
 
-    public Page<ProductDTO> findProductsByTitle(String title, Pageable pageable) {
-        return productRepository.findByTitleContainingIgnoreCase(title, pageable)
-                .map(this::convertToProductDTO);
-    }
-
-    public Page<ProductDTO> findProductsByCategory(Long categoryId, Pageable pageable) {
-        return productRepository.findByCategoryId(categoryId, pageable)
-                .map(this::convertToProductDTO);
-    }
-
-    public Page<ProductDTO> findProductsByAuthor(Long authorId, Pageable pageable) {
-        return productRepository.findByAuthorId(authorId, pageable)
-                .map(this::convertToProductDTO);
-    }
     public Page<ProductDTO> searchProducts(String title, Long categoryId, Long authorId, Pageable pageable) {
         Page<Product> products;
+
 
         if (title != null) {
             products = productRepository.findByTitleContainingIgnoreCase(title, pageable);
@@ -130,6 +109,7 @@ public class ProductService {
     }
 
     public ProductDTO createDefaultProductDTO() {
+
         Long id = 1L;
         String title = "Nazwa";
         String description = "Opis";
@@ -138,7 +118,7 @@ public class ProductService {
         ProductType productType = ProductType.DEFAULT_TYPE;
 
 
-        ProductDTO productDTO = ProductDTO.builder()
+        return ProductDTO.builder()
                 .id(id)
                 .title(title)
                 .description(description)
@@ -146,22 +126,18 @@ public class ProductService {
                 .price(price)
                 .productType(productType)
                 .build();
-
-        return productDTO;
     }
+
     public List<ProductType> findAllProductTypes() {
         return Arrays.asList(ProductType.values());
     }
 
-    public Model prepareAddProductFormModel(Model model) {
+    public void prepareAddProductFormModel(Model model) {
         ProductDTO productDTO = createDefaultProductDTO();
         model.addAttribute("product", productDTO);
         model.addAttribute("productTypes", findAllProductTypes());
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("authors", producerService.findAll());
-        return model;
     }
-
 }
-
 

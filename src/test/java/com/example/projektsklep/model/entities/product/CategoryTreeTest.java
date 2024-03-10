@@ -1,16 +1,14 @@
 package com.example.projektsklep.model.entities.product;
 
-import org.junit.jupiter.api.Assertions;
+;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 class CategoryTreeTest {
     @Mock
@@ -22,77 +20,93 @@ class CategoryTreeTest {
 
     @BeforeEach
     void setUp() {
-        categoryTree = new CategoryTree(1L, "Książki", null);
+        // Given: Inicjalizacja struktury kategorii sprzętu gastronomicznego
+        categoryTree = new CategoryTree(1L, "Sprzęt gastronomiczny", null);
     }
 
     @Test
     void testSetId() {
+        // When: Ustawiamy identyfikator dla kategorii
         categoryTree.setId(2L);
+
+        // Then: Sprawdzamy, czy identyfikator został prawidłowo ustawiony
         assertThat(categoryTree.getId()).isEqualTo(2L);
     }
 
     @Test
     void testSetName() {
-        categoryTree.setName("Fantastyka");
-        assertThat(categoryTree.getName()).isEqualTo("Fantastyka");
+        // When: Ustawiamy nazwę dla kategorii
+        categoryTree.setName("Urządzenia chłodnicze");
+
+        // Then: Sprawdzamy, czy nazwa została prawidłowo ustawiona
+        assertThat(categoryTree.getName()).isEqualTo("Urządzenia chłodnicze");
     }
 
     @Test
     void testSetParent() {
-        CategoryTree parent = new CategoryTree(2L, "Literatura", null);
+        // Given: Przygotowanie kategorii nadrzędnej
+        CategoryTree parent = new CategoryTree(2L, "Wyposażenie kuchni", null);
+
+        // When: Ustawiamy kategorię nadrzędną
         categoryTree.setParent(parent);
+
+        // Then: Sprawdzamy, czy kategoria nadrzędna została prawidłowo ustawiona
         assertThat(categoryTree.getParent()).isSameAs(parent);
     }
 
     @Test
     void testSetChildren() {
-        CategoryTree child1 = new CategoryTree(3L, "Kryminał", 1L);
-        CategoryTree child2 = new CategoryTree(4L, "Science Fiction", 1L);
+        // Given: Przygotowanie kategorii podrzędnych
+        CategoryTree child1 = new CategoryTree(3L, "Piekarniki", 1L);
+        CategoryTree child2 = new CategoryTree(4L, "Zmywarki", 1L);
+
+        // When: Ustawiamy kategorie podrzędne
         categoryTree.setChildren(List.of(child1, child2));
+
+        // Then: Sprawdzamy, czy lista kategorii podrzędnych została prawidłowo ustawiona
         assertThat(categoryTree.getChildren()).containsExactlyInAnyOrder(child1, child2);
     }
 
     @Test
     public void shouldReturnChildrenList() {
-        // Given
-        CategoryTree parentCategory = new CategoryTree(1L, "Książki", null);
-        CategoryTree childCategory1 = new CategoryTree(2L, "Fantastyka", 1L);
-        CategoryTree childCategory2 = new CategoryTree(3L, "Kryminał", 1L);
+        // Given: Przygotowanie struktury kategorii z kategoriami podrzędnymi
+        CategoryTree parentCategory = new CategoryTree(1L, "Sprzęt gastronomiczny", null);
+        CategoryTree childCategory1 = new CategoryTree(2L, "Piekarniki", 1L);
+        CategoryTree childCategory2 = new CategoryTree(3L, "Zmywarki", 1L);
         parentCategory.setChildren(List.of(childCategory1, childCategory2));
 
-        // When
+        // When: Pobieramy listę kategorii podrzędnych
         List<CategoryTree> children = parentCategory.getChildren();
 
-        // Then
+        // Then: Weryfikujemy, czy lista zawiera prawidłowe kategorie podrzędne
         assertThat(children).containsExactlyInAnyOrder(childCategory1, childCategory2);
     }
+
     @Test
     public void shouldReturnParentCategory() {
-        // Given
-        CategoryTree parentCategory = new CategoryTree(1L, "Książki", null);
-        CategoryTree childCategory = new CategoryTree(2L, "Fantastyka", 1L);
+        // Given: Przygotowanie kategorii podrzędnej z nadrzędną
+        CategoryTree parentCategory = new CategoryTree(1L, "Sprzęt gastronomiczny", null);
+        CategoryTree childCategory = new CategoryTree(2L, "Piekarniki", 1L);
         childCategory.setParent(parentCategory);
 
-        // When
+        // When: Pobieramy kategorię nadrzędną kategorii podrzędnej
         CategoryTree parent = childCategory.getParent();
 
-        // Then
+        // Then: Weryfikujemy, czy zwrócona kategoria nadrzędna jest prawidłowa
         assertThat(parent).isSameAs(parentCategory);
     }
+
     @Test
     public void shouldSetChildrenList() {
-        // Given
-        CategoryTree parentCategory = new CategoryTree(1L, "Książki", null);
-        CategoryTree childCategory1 = new CategoryTree(2L, "Fantastyka", 1L);
-        CategoryTree childCategory2 = new CategoryTree(3L, "Kryminał", 1L);
+        // Given: Przygotowanie kategorii nadrzędnej i podrzędnych
+        CategoryTree parentCategory = new CategoryTree(1L, "Sprzęt gastronomiczny", null);
+        CategoryTree childCategory1 = new CategoryTree(2L, "Piekarniki", 1L);
+        CategoryTree childCategory2 = new CategoryTree(3L, "Zmywarki", 1L);
 
-        // When
+        // When: Ustawiamy listę kategorii podrzędnych dla kategorii nadrzędnej
         parentCategory.setChildren(List.of(childCategory1, childCategory2));
 
-        // Then
+        // Then: Weryfikujemy, czy lista kategorii podrzędnych została prawidłowo ustawiona
         assertThat(parentCategory.getChildren()).containsExactlyInAnyOrder(childCategory1, childCategory2);
     }
-
-
 }
-

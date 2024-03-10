@@ -1,23 +1,24 @@
 package com.example.projektsklep.model.entities.order;
 
-
 import com.example.projektsklep.model.entities.adress.Address;
 import com.example.projektsklep.model.entities.product.Product;
 import com.example.projektsklep.model.entities.user.User;
 import com.example.projektsklep.model.enums.OrderStatus;
 import com.example.projektsklep.model.notification.Observer;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+
 @Entity
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,13 +33,12 @@ public class Order implements Observable {
     @JoinColumn(name = "account_holder_id")
     private User accountHolder;
 
-
     @ManyToOne
     @JoinColumn(name = "shipping_address_id")
     private Address shippingAddress;
+
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
-
     @Column(name = "date_created")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateCreated;
@@ -46,11 +46,13 @@ public class Order implements Observable {
     @Column(name = "sent_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate sentAt;
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LineOfOrder> lineOfOrders = new ArrayList<>();
 
     private BigDecimal totalPrice;
+    @Transient
+    private List<Observer> registeredObservers = new ArrayList<>();
+
 
     public void calculateTotalPrice() {
         BigDecimal totalPrice = BigDecimal.ZERO;
@@ -60,18 +62,18 @@ public class Order implements Observable {
         this.totalPrice = totalPrice;
     }
 
-    @Transient
-    private List<Observer> registeredObservers = new ArrayList<>();
 
     @Override
     public void registerObserver(Observer observer) {
         registeredObservers.add(observer);
     }
 
+
     @Override
     public void unregisterObserver(Observer observer) {
         registeredObservers.remove(observer);
     }
+
 
     @Override
     public void notifyObservers() {
@@ -79,6 +81,7 @@ public class Order implements Observable {
             observer.update(this);
         }
     }
+
 
     public void changeOrderStatus(OrderStatus orderStatus) {
         setOrderStatus(orderStatus);
@@ -100,9 +103,11 @@ public class Order implements Observable {
         }
     }
 
+
     public void setListOfOrders(List<LineOfOrder> lineOfOrders) {
         this.lineOfOrders = lineOfOrders;
     }
+
 
     public Address getAddress() {
         if (this.shippingAddress != null) {
@@ -112,6 +117,7 @@ public class Order implements Observable {
         }
     }
 
+
     public List<Product> getProducts() {
         if (this.lineOfOrders != null) {
             List<Product> products = new ArrayList<>();
@@ -120,7 +126,7 @@ public class Order implements Observable {
             }
             return products;
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 

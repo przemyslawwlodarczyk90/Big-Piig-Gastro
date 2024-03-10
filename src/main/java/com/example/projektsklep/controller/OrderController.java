@@ -1,20 +1,15 @@
 package com.example.projektsklep.controller;
 
 
-
 import com.example.projektsklep.exception.OrderNotFoundException;
-import com.example.projektsklep.exception.OrderRetrievalException;
-import com.example.projektsklep.exception.OrderUpdateException;
 import com.example.projektsklep.model.dto.AddressDTO;
-import com.example.projektsklep.model.dto.OrderDTO;
+
 import com.example.projektsklep.model.dto.UserDTO;
-import com.example.projektsklep.model.enums.OrderStatus;
 import com.example.projektsklep.service.BasketService;
 import com.example.projektsklep.service.OrderService;
 import com.example.projektsklep.service.UserService;
-import com.example.projektsklep.utils.AddressDTOInitializer;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -25,13 +20,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
+
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
 
+
     private final OrderService orderService;
     private final BasketService basketService;
-
     private final UserService userService;
 
 
@@ -41,32 +37,36 @@ public class OrderController {
         this.userService = userService;
     }
 
+
+    @Operation(summary = "Wyświetla listę zamówień")
     @GetMapping
     public String listOrders(Model model,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Map<String, Object> response = orderService.findAllOrdersWithPagination(pageable);
+        Map<String, Object> response = orderService.findAllOrdersWithPagination(pageable); // Pobieranie zamówień z paginacją.
 
         model.addAllAttributes(response);
 
         return "order_list";
     }
 
+
+    @Operation(summary = "Szczegóły zamówienia")
     @ExceptionHandler(OrderNotFoundException.class)
     @GetMapping("/{orderId}")
     public String orderDetails(@PathVariable Long orderId, Model model) {
-        try {
-            OrderDTO orderDTO = orderService.findOrderDTOById(orderId);
-            model.addAttribute("order", orderDTO);
-            return "order_details";
-        } catch (OrderNotFoundException e) {
-            model.addAttribute("error", "Zamówienie nie znalezione");
-            return "error";
-        }
+
+        orderService.findOrderDTOById(orderId)
+                .ifPresentOrElse(
+                        orderDTO -> model.addAttribute("order", orderDTO),
+                        () -> model.addAttribute("error", "Zamówienie nie znalezione")
+                );
+        return orderService.findOrderDTOById(orderId).isPresent() ? "order_details" : "error";
     }
 
 
+    @Operation(summary = "Tworzenie zamówienia z koszyka")
     @PostMapping("/create")
     public String createOrderFromBasket(RedirectAttributes redirectAttributes, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -88,9 +88,4 @@ public class OrderController {
         return redirectUrl;
     }
 
-
 }
-
-
-
-

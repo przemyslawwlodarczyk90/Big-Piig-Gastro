@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj kategorię</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+<h1>Dodaj nową kategorię</h1>
+<form th:action="@{/admin/addCategory}" th:object="${categoryDTO}" method="post" class="row g-3">
+    <div class="col-12">
+        <label for="name" class="form-label">Nazwa kategorii:</label>
+        <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Nazwa kategorii" required>
+    </div>
+    <div class="col-12">
+        <label for="parentCategoryId" class="form-label">Kategoria nadrzędna:</label>
+        <select id="parentCategoryId" th:field="*{parentCategoryId}" class="form-select">
+            <option value="">Brak kategorii nadrzędnej</option>
+            <option th:each="cat : ${allCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+        </select>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Dodaj Kategorię</button>
+    </div>
+</form>
+
+<div>
+    <a href="/categories" class="btn btn-dark">  Powrót </a>
+</div>
+</body>
+</html>

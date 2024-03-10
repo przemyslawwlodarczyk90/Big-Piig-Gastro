@@ -1,6 +1,5 @@
 package com.example.projektsklep.model.notification;
 
-
 import com.example.projektsklep.model.entities.order.Observable;
 import com.example.projektsklep.model.entities.order.Order;
 
@@ -13,10 +12,12 @@ public class Email implements Observer {
     private Order order;
     private ByteArrayOutputStream capturedOutput;
 
+
     public Email(Order order) {
         this.order = order;
         this.capturedOutput = new ByteArrayOutputStream();
     }
+
 
     @Override
     public void update(Observable observable) {
@@ -28,6 +29,7 @@ public class Email implements Observer {
             System.setOut(oldStream);
         }
     }
+
 
     public String getCapturedOutput() {
         return capturedOutput.toString();

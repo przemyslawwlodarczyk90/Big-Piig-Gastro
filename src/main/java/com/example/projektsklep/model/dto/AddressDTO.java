@@ -15,5 +15,4 @@ public record AddressDTO(
         String postalCode,
         @NotBlank
         String country
-) {
-}
+) { }

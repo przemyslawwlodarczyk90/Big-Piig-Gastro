@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Koszyk</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+</head>
+<body>
+<h1>Koszyk</h1>
+<div th:if="${!basket.lineOfOrders.isEmpty()}">
+    <ul>
+        <li th:each="item : ${basket.lineOfOrders}" th:id="${'product-' + item.product.id}">
+            <span th:text="${item.product.title}">Nazwa produktu</span> -
+            <span th:text="${item.quantity}">Ilość</span>
+        </li>
+    </ul>
+    <a href="/account/checkoutBasket" class="btn btn-primary">Przejdź do kasy</a>
+</div>
+<div th:if="${basket.lineOfOrders.isEmpty()}">
+    <p>Twój koszyk jest pusty.</p>
+</div>
+<a href="/account/panel" class="btn btn-secondary">Powrót</a>
+</body>
+</html>

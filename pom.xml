@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.example</groupId>
     <artifactId>Projekt-Sklep</artifactId>
@@ -36,8 +36,8 @@
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+            <version>3.1.2.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -69,11 +69,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
@@ -101,11 +96,15 @@
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -113,28 +112,16 @@
             <version>20230618</version>
         </dependency>
         <dependency>
-            <groupId>yummy.json</groupId>
-            <artifactId>json</artifactId>
-            <version>0.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>3.6.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
             <version>5.3.0</version>
         </dependency>
-
-
-
-
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -158,5 +145,4 @@
             <url>https://repo.clojars.org/</url>
         </repository>
     </repositories>
-
 </project>

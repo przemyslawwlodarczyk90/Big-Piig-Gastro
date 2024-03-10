@@ -51,8 +51,6 @@ public class DbInit {
 
         Role adminRole = Role.fromAdminOrUser(AdminOrUser.ADMIN);
         Role userRole = Role.fromAdminOrUser(AdminOrUser.USER);
-
-
         Role savedAdminRole = roleRepository.save(adminRole);
         Role savedUserRole = roleRepository.save(userRole);
 
@@ -64,7 +62,6 @@ public class DbInit {
                 .passwordHash(passwordEncoder.encode("user"))
                 .roles(Set.of(savedUserRole))
                 .build();
-
         User admin = User.builder()
                 .firstName("admin")
                 .lastName("admin")
@@ -72,24 +69,18 @@ public class DbInit {
                 .passwordHash(passwordEncoder.encode("admin"))
                 .roles(Set.of(savedAdminRole))
                 .build();
-
-
         userRepository.save(user);
         userRepository.save(admin);
 
         List<Category> categories = createCategories();
-
         List<Producer> authors = createAuthors();
 
         createProducts(categories, authors);
-
-
         assignOrdersToUsers();
     }
 
     private List<Category> createCategories() {
         List<Category> categories = new ArrayList<>();
-
         categories.add(new Category("Piece konwekcyjne"));
         categories.add(new Category("Zmywarki przemysłowe"));
         categories.forEach(categoryRepository::save);
@@ -98,7 +89,6 @@ public class DbInit {
 
     private List<Producer> createAuthors() {
         List<Producer> authors = new ArrayList<>();
-
         authors.add(new Producer("Rational"));
         authors.add(new Producer("Electrolux"));
         authors.forEach(authorRepository::save);
@@ -107,8 +97,7 @@ public class DbInit {
 
     private void createProducts(List<Category> categories, List<Producer> authors) {
         Random rand = new Random();
-        List<String> productNames = List.of("Piec Rational", "Zmywarka Electrolux", "Chłodziarka Coldex", "Mikser Bosh", "Grill Weber"); // Dodaj więcej nazw
-
+        List<String> productNames = List.of("Piec Rational", "Zmywarka Electrolux", "Chłodziarka Coldex", "Mikser Bosh", "Grill Weber");
         for (int i = 0; i < 100; i++) {
             Category category = categories.get(rand.nextInt(categories.size()));
             Producer author = authors.get(rand.nextInt(authors.size()));

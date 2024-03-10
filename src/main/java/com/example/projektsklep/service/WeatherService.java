@@ -1,7 +1,6 @@
 package com.example.projektsklep.service;
 
 import com.example.projektsklep.exception.InvalidCityException;
-import com.example.projektsklep.model.entities.user.User;
 import com.example.projektsklep.model.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,17 +14,21 @@ import java.util.Optional;
 @Service
 public class WeatherService {
 
+
     @Value("${weather.api.key}")
     private String apiKey;
 
     @Value("${weather.api.url}")
     private String apiUrl;
 
+
     private final UserRepository userRepository;
+
 
     public WeatherService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     public Optional<String> getWeatherData(String city, Principal principal) {
         if (city != null && !city.isBlank()) {
@@ -62,7 +65,6 @@ public class WeatherService {
         int humidity = main.getInt("humidity");
         JSONObject weather = jsonObject.getJSONArray("weather").getJSONObject(0);
         String description = weather.getString("description");
-
         return String.format("City: %s\nTemperature: %.1f°C\nHumidity: %d%%\nDescription: %s",
                 city, temp, humidity, description);
     }

@@ -28,13 +28,7 @@ public class Role {
     @ManyToMany
     private Set<User> users = new HashSet<>();
 
-    public void addUser(User user) {
-        users.add(user);
-    }
 
-    public Set<User> getUsers() {
-        return users;
-    }
 }
 
 

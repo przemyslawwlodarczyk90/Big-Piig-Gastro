@@ -1,36 +1,18 @@
+// Nasłuchuje, czy cała zawartość strony została załadowana.
 document.addEventListener('DOMContentLoaded', function () {
-    updatePanels();
+    updatePanels(); // Wywołuje funkcję aktualizującą panele na stronie.
 
+    // Tablica z wiadomościami promocyjnymi sklepu "u Świni".
     var messages = [
-        // ... Twoje wiadomości ...
+        // Lista promocyjnych hasł reklamowych.
     ];
-    var messageDiv = document.getElementById('messageDiv');
-    var index = 0;
+
+    var messageDiv = document.getElementById('messageDiv'); // Pobiera element DOM, w którym będą wyświetlane wiadomości.
+    var index = 0; // Indeks aktualnej wiadomości do wyświetlenia.
+
+    // Ustawia interwał, który co 5 sekund zmienia wyświetlaną wiadomość.
     setInterval(function () {
-        messageDiv.innerHTML = messages[index];
-        index = (index + 1) % messages.length;
+        messageDiv.innerHTML = messages[index]; // Aktualizuje treść elementu z wiadomościami.
+        index = (index + 1) % messages.length; // Oblicza indeks następnej wiadomości, zapętla się po osiągnięciu końca tablicy.
     }, 5000);
 });
-
-function updatePanels() {
-    fetch('/api/user/status')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // Wyświetla otrzymane dane w konsoli
-
-            var userLoggedIn = data.loggedIn;
-            var userRoles = data.roles;
-
-            var adminPanel = document.getElementById('adminPanel');
-            var userPanel = document.getElementById('userPanel');
-
-            if (userLoggedIn) {
-                adminPanel.style.display = userRoles.includes('ROLE_ADMIN') ? 'block' : 'none';
-                userPanel.style.display = userRoles.includes('ROLE_USER') ? 'block' : 'none';
-            } else {
-                adminPanel.style.display = 'none';
-                userPanel.style.display = 'none';
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}

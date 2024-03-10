@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wyszukiwanie użytkowników</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+<h1>Wyszukiwanie użytkowników</h1>
+<form action="/admin/searchUser" method="get" class="input-group mb-3">
+    <label for="lastName" class="input-group-text">Nazwisko użytkownika:</label>
+    <input type="text" id="lastName" name="lastName" required class="form-control">
+    <button type="submit" class="btn btn-primary">Szukaj</button>
+</form>
+
+<a href="/admin/panel" class="btn btn-info">Admin panel</a>
+</body>
+</html>
