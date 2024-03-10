@@ -20,6 +20,13 @@ Big Piig Gastro to sklep internetowy zaprojektowany specjalnie dla branży HoReC
 - **JPA & Hibernate**
 - **Bootstrap**
 
+## Dokumentacja API
+
+Dla ułatwienia korzystania z naszego API, dostarczamy interaktywną dokumentację przy pomocy Swagger UI. Daje to możliwość szybkiego zapoznania się z dostępnymi endpointami, ich specyfikacjami oraz testowania ich działania bezpośrednio z przeglądarki.
+
+Aby uzyskać dostęp do dokumentacji Swagger UI, odwiedź: `http://localhost:8080/swagger-ui/index.html` po uruchomieniu aplikacji.
+
+
 ## Testowanie
 
 Projekt obejmuje kompleksowe testy jednostkowe i integracyjne, zapewniające wysoką jakość i niezawodność funkcjonalności:
