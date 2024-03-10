@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public String handleProductNotFound() {
+    public String handleProductNotFound(Exception exception) {
         return null;
     }
     @ExceptionHandler(UserNotFoundException.class)

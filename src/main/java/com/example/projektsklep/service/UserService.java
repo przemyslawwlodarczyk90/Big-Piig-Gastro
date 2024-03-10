@@ -110,21 +110,17 @@ public class UserService {
             address.setCity(addressDTO.city());
             address.setPostalCode(addressDTO.postalCode());
             address.setCountry(addressDTO.country());
-            address = addressRepository.save(address); // Zapis adresu w bazie danych.
-            user.setAddress(address); // Przypisanie adresu do użytkownika.
+            address = addressRepository.save(address);
+            user.setAddress(address);
         }
 
-        // Zapis zmodyfikowanego użytkownika w bazie danych.
         userRepository.save(user);
 
-        // Konwersja zaktualizowanego użytkownika na DTO i zwrócenie go.
         convertToUserDTO(user);
     }
 
-    // Konwersja obiektu User na DTO.
     private UserDTO convertToUserDTO(User user) {
         AddressDTO addressDTO = null;
-        // Jeśli użytkownik ma przypisany adres, konwertuje go na DTO.
         if (user.getAddress() != null) {
             Address address = user.getAddress();
             addressDTO = AddressDTO.builder()
@@ -136,13 +132,12 @@ public class UserService {
                     .build();
         }
 
-        // Tworzy i zwraca DTO użytkownika z uwzględnieniem jego adresu i ról.
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .password(null) // Hasło nie jest uwzględniane w DTO.
+                .password(null)
                 .address(addressDTO)
                 .roles(user.getRoles().stream()
                         .map(role -> new RoleDTO(role.getId(), role.getRoleType().name()))
@@ -150,23 +145,18 @@ public class UserService {
                 .build();
     }
 
-    // Konwersja z UserDTO na encję User.
     public User convertToUser(UserDTO userDTO) {
         User user = new User();
-        // Ustawia dane użytkownika na podstawie DTO.
         user.setId(userDTO.id());
         user.setEmail(userDTO.email());
         user.setFirstName(userDTO.firstName());
         user.setLastName(userDTO.lastName());
 
-        // Konwertuje adres z DTO na encję i przypisuje go do użytkownika, jeśli istnieje.
         user.setAddress(userDTO.address() != null ? addressService.convertToEntity(userDTO.address()) : null);
         return user;
     }
 
 
-
-    // Inicjalizacja nowego UserDTO z pustymi wartościami.
     public UserDTO initializeNewUserDTO() {
         AddressDTO addressDTO = new AddressDTO(0L, "", "", "", "");
         return UserDTO.builder()
@@ -181,13 +171,11 @@ public class UserService {
     }
 
 
-
-    // Pobranie szczegółów użytkownika dla panelu na podstawie e-maila.
     public UserDTO getUserDetailsForPanel(String email) {
         UserDTO userDTO = findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Nie znaleziono użytkownika."));
 
-        logUserAndAddressDetails(userDTO); // Logowanie informacji o użytkowniku i jego adresie.
+        logUserAndAddressDetails(userDTO);
 
         return userDTO;
     }
@@ -203,12 +191,10 @@ public class UserService {
         }
     }
 
-    // Przygotowanie UserDTO do edycji na podstawie e-maila.
     public UserDTO prepareUserDTOForEdit(String email) {
         UserDTO userDTO = findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Nie znaleziono użytkownika."));
 
-        // Jeśli DTO nie ma przypisanego adresu, przypisuje pusty AddressDTO.
         if (userDTO.address() == null) {
             AddressDTO emptyAddress = new AddressDTO(null, "", "", "", "");
             userDTO = new UserDTO(userDTO.id(), userDTO.firstName(), userDTO.lastName(), userDTO.email(),

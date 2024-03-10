@@ -138,24 +138,18 @@ public class BasketService {
 
 
 
-
-
-
-
-    // Kończy proces składania zamówienia i przekierowuje do strony potwierdzenia.
     public String finalizeOrderAndRedirect(Long userId, AddressDTO potentialNewShippingAddress, boolean useDifferentAddress) {
 
 
 
         AddressDTO finalShippingAddress = useDifferentAddress ? potentialNewShippingAddress : null;
 
-        // Przygotowuje DTO zamówienia na podstawie danych koszyka i wybranego adresu dostawy.
+
         OrderDTO orderDTO = prepareOrderForCheckout(userId, finalShippingAddress);
 
-        // Składa zamówienie w systemie.
+
         placeOrder(orderDTO);
 
-        // Czyści koszyk po złożeniu zamówienia.
         clear();
 
         // Przekierowuje do strony potwierdzenia zamówienia.
