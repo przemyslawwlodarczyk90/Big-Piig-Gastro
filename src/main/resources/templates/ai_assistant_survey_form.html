@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ankieta Restauracyjna</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Ankieta Restauracyjna</h2>
+    <form action="/survey" method="post">
+        <div class="form-group">
+            <label for="cuisineType">Jakiego typu ma to być restauracja?</label>
+            <select id="cuisineType" name="cuisineType" class="form-control">
+                <option value="polska">Polska kuchnia</option>
+                <option value="włoska">Włoska kuchnia</option>
+                <option value="grecka">Grecka kuchnia</option>
+                <option value="kebab">Kebab</option>
+                <option value="lodziarnia">Lodziarnia</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="restaurantSize">Jakiej wielkości ma być lokal / na ile osób?</label>
+            <select id="restaurantSize" name="restaurantSize" class="form-control">
+                <option value="do 20 osób">Do 20 osób</option>
+                <option value="20-50 osób">20-50 osób</option>
+                <option value="50-100 osób">50-100 osób</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Budżet:</label>
+            <div class="form-check">
+                <input type="radio" id="budgetLow" name="budget" value="niski" class="form-check-input">
+                <label for="budgetLow" class="form-check-label">Niski</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="budgetMedium" name="budget" value="średni" class="form-check-input">
+                <label for="budgetMedium" class="form-check-label">Średni</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="budgetHigh" name="budget" value="wysoki" class="form-check-input">
+                <label for="budgetHigh" class="form-check-label">Wysoki</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="furniturePreferences">Preferencje dotyczące mebli:</label>
+            <select id="furniturePreferences" name="furniturePreferences" class="form-control">
+                <option value="nowoczesne">Nowoczesne</option>
+                <option value="klasyczne">Klasyczne</option>
+                <option value="vintage">Vintage</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="decorationDetails">Czy zależy Ci na dekoracjach?</label>
+            <select id="decorationDetails" name="decorationDetails" class="form-control">
+                <option value="tak">Tak</option>
+                <option value="nie">Nie</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Wyślij</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
