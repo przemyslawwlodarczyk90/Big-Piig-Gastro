@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html>
 <head>
     <title>Ankieta Restauracyjna</title>
@@ -6,7 +6,12 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2>Ankieta Restauracyjna</h2>
+    <!-- Tu dodajemy logo -->
+    <div class="text-center mb-4">
+        <img src="/logo.jpg" alt="Logo firmy" style="max-width: 200px;"> <!-- Dostosuj szerokość do swoich potrzeb -->
+    </div>
+
+    <h2>Jak interesy to tylko ze Świnią! Ułóż z nami listę zakupów potrzebnych po to żeby otworzyć Twoją wymarzoną restauracje :)</h2>
     <form action="/survey" method="post">
         <div class="form-group">
             <label for="cuisineType">Jakiego typu ma to być restauracja?</label>
@@ -57,6 +62,8 @@
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Wyślij</button>
+
+        <a href="/home" class="btn btn-primary btn-home">Powrót</a>
     </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

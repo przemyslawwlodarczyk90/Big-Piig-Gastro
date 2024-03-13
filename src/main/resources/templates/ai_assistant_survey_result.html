@@ -2,26 +2,42 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Twój biznes plan - lista zakupów do Twojego lokalu! :) </title>
+    <title>Twój biznes plan - lista zakupów do Twojego lokalu! :)</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .result-container {
+            max-height: 600px; /* Zwiększona przestrzeń na wyniki */
+            overflow-y: auto; /* Dodaje pionowy pasek przewijania, jeśli zawartość przekracza maksymalną wysokość */
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
         .shopping-list {
-            margin: 20px 0;
+            margin: 0;
+            padding: 0;
+            list-style: none; /* Usuwa punktory */
         }
         .shopping-list-item {
-            margin-bottom: 10px;
-            font-size: 18px;
+            margin-bottom: 5px;
+            font-size: 16px; /* Zmniejszona wielkość czcionki */
         }
     </style>
 </head>
 <body>
 <div class="container mt-5">
+    <!-- Logo firmy -->
+    <div class="text-center mb-4">
+        <img src="/logo.jpg" alt="Logo firmy" style="max-width: 100px;">
+    </div>
+
     <h2>Wyniki Ankiety</h2>
-    <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">Oto twoja spersonalizowana lista zakupów:</h4>
-        <ul class="shopping-list">
-            <li th:each="item : ${shoppingList}" class="shopping-list-item" th:text="${item}"></li>
-        </ul>
+    <div class="result-container">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Oto twoja spersonalizowana lista zakupów:</h4>
+            <ul class="shopping-list">
+                <li th:each="item : ${shoppingList}" class="shopping-list-item" th:text="${item}"></li>
+            </ul>
+        </div>
     </div>
     <a href="/survey" class="btn btn-primary">Wypełnij ankietę ponownie</a>
 </div>
