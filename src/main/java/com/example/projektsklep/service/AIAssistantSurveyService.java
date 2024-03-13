@@ -1,21 +1,10 @@
 package com.example.projektsklep.service;
 
 import com.example.projektsklep.utils.AiAssistantSurveyResponse;
-import com.theokanning.openai.service.OpenAiService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AIAssistantSurveyService {
-
-    @Value("${openai.api.key}")
-    private String apiKey;
-
-    @Bean
-    public OpenAiService openAiService() {
-        return new OpenAiService(apiKey.trim());
-    }
 
     public String processSurveyResponse(AiAssistantSurveyResponse response) {
         StringBuilder prompt = new StringBuilder("Pomóż mi stworzyć biznes plan - listę zakupów dla nowo otwieranej restauracji. ");
@@ -74,4 +63,3 @@ public class AIAssistantSurveyService {
         return decorationDetails.equals("tak") ? "Zależy na dekoracjach" : "Nie zależy na dekoracjach";
     }
 }
-
