@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 public class AIAssistantSurveyService {
 
     public String processSurveyResponse(AiAssistantSurveyResponse response) {
-        StringBuilder prompt = new StringBuilder("Pomóż mi stworzyć biznes plan - listę zakupów dla nowo otwieranej restauracji. ");
+        StringBuilder prompt = new StringBuilder("Pomóż mi stworzyć biznes plan - listę zakupów dla nowo otwieranej restauracji.");
         prompt.append("Typ kuchni: ").append(mapCuisineType(response.getCuisineType())).append(". ");
         prompt.append("Wielkość lokalu: ").append(response.getRestaurantSize()).append(". ");
         prompt.append("Budżet: ").append(mapBudget(response.getBudget())).append(". ");
         prompt.append("Preferencje meblowe: ").append(mapFurniturePreferences(response.getFurniturePreferences())).append(". ");
         prompt.append("Dekoracje: ").append(mapDecorationDetails(response.getDecorationDetails())).append(".");
+        prompt.append("Wyniki podaje w bardzo ładnej liście. Weź pod uwagę wszystkie aspekty o których piszę poniżej.  Nawet wielkośc lokalu. " +
+                "Staraj się podać przedmioty do kupienia nawet z ilością.  Dopisz też pare zdań od siebie nt. urządzaniu lokalu.");
         return prompt.toString();
     }
 

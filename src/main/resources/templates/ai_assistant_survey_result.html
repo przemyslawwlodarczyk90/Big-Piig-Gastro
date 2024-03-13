@@ -5,39 +5,47 @@
     <title>Twój biznes plan - lista zakupów do Twojego lokalu! :)</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
         .result-container {
-            max-height: 600px; /* Zwiększona przestrzeń na wyniki */
-            overflow-y: auto; /* Dodaje pionowy pasek przewijania, jeśli zawartość przekracza maksymalną wysokość */
+            flex-grow: 1; /* Pozwala kontenerowi na wyniki rozciągnąć się i zająć maksymalną możliwą przestrzeń */
+            overflow-y: auto; /* Zapewnia pionowe przewijanie, gdy zawartość jest większa niż dostępna wysokość */
             padding: 15px;
+            margin-top: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #f8f9fa;
         }
         .shopping-list {
             margin: 0;
             padding: 0;
-            list-style: none; /* Usuwa punktory */
+            list-style: none;
         }
         .shopping-list-item {
             margin-bottom: 5px;
-            font-size: 16px; /* Zmniejszona wielkość czcionki */
+            font-size: 1rem; /* Standardowa wielkość czcionki */
         }
     </style>
 </head>
 <body>
-<div class="container mt-5">
-    <!-- Logo firmy -->
+<div class="container">
     <div class="text-center mb-4">
         <img src="/logo.jpg" alt="Logo firmy" style="max-width: 100px;">
     </div>
 
-    <h2>Wyniki Ankiety</h2>
     <div class="result-container">
-        <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Oto twoja spersonalizowana lista zakupów:</h4>
-            <ul class="shopping-list">
-                <li th:each="item : ${shoppingList}" class="shopping-list-item" th:text="${item}"></li>
-            </ul>
-        </div>
+        <h2>Biznes Plan - Świńska Podpowiadarka!</h2>
+        <ul class="shopping-list">
+            <li class="shopping-list-item" th:each="item : ${shoppingList}" th:text="${item}"></li>
+        </ul>
     </div>
     <a href="/survey" class="btn btn-primary">Wypełnij ankietę ponownie</a>
 </div>
