@@ -30,7 +30,8 @@ class AiAssistantSurveyControllerTest {
     private AIAssistantSurveyService aiAssistantSurveyService;
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser(username = "user"
+    )
     void showSurveyForm_ShouldReturnSurveyFormView() throws Exception {
         mockMvc.perform(get("/survey"))
                 .andExpect(status().isOk())
@@ -46,7 +47,7 @@ class AiAssistantSurveyControllerTest {
 
         mockMvc.perform(post("/survey")
                         .flashAttr("surveyResponse", surveyResponse)
-                        .with(csrf())) // Dodanie tokena CSRF
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ai_assistant_survey_result"))
                 .andExpect(model().attributeExists("shoppingList"))
