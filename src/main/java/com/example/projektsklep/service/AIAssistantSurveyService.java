@@ -4,7 +4,6 @@ import com.example.projektsklep.utils.AiAssistantSurveyResponse;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.service.OpenAiService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +13,7 @@ public class AIAssistantSurveyService {
 
     private final OpenAiService openAiService;
 
-    @Autowired
+
     public AIAssistantSurveyService(OpenAiService openAiService) {
         this.openAiService = openAiService;
     }
@@ -42,7 +41,7 @@ public class AIAssistantSurveyService {
         return Arrays.asList(responseText.split(" - "));
     }
 
-    private String processSurveyResponse(AiAssistantSurveyResponse response) {
+    public String processSurveyResponse(AiAssistantSurveyResponse response) {
         StringBuilder prompt = new StringBuilder("Pomóż mi stworzyć biznes plan - listę zakupów dla nowo otwieranej restauracji.");
         prompt.append("Typ kuchni: ").append(mapCuisineType(response.getCuisineType())).append(". ");
         prompt.append("Wielkość lokalu: ").append(response.getRestaurantSize()).append(". ");
