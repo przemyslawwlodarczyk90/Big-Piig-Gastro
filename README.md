@@ -57,9 +57,10 @@ Testy zapewniają niezawodność i wysoką jakość działania systemu.
 
 1. 💾 Sklonuj repozytorium.
 2. 🔑 Skonfiguruj dane dostępowe do bazy danych w `application.properties`.
-3. 📂 Zbuduj: `mvn clean install`
-4. 🚀 Uruchom: `mvn spring-boot:run`
-5. 🏠 Wejdź na: [http://localhost:8080](http://localhost:8080)
+3. 🌐 Ustaw zmienne środowiskowe `WEATHER_API_KEY` i `OPENAI_API_KEY` lub podaj je w lokalnym pliku konfiguracyjnym, który nie jest wersjonowany.
+4. 📂 Zbuduj: `mvn clean install`
+5. 🚀 Uruchom: `mvn spring-boot:run`
+6. 🏠 Wejdź na: [http://localhost:8080](http://localhost:8080)
 
 ---
 
