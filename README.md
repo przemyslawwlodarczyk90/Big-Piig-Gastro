@@ -1,5 +1,12 @@
 # 🐷 Big Piig Gastro - Platforma dla HoReCa 🍽️
 
+Szybki start Windows: `.\scripts\dev.ps1` (JDK 17, lokalna baza H2, dane demo).
+Testy i kontrola minimum 70% pokrycia linii: `.\scripts\dev.ps1 -Verify`.
+Raport JaCoCo: `target/site/jacoco/index.html`.
+
+- [Uruchomienie i blad JVM target 5](docs/DEVELOPMENT.md)
+- [Zasady magazynu i generatora dostaw](docs/INVENTORY.md)
+
 Big Piig Gastro to sklep internetowy zaprojektowany specjalnie dla branży HoReCa. Platforma umożliwia zarządzanie produktami, kategoriami, zamówieniami oraz dostęp do danych pogodowych i wsparcie AI przy planowaniu zakupów.
 
 ---
