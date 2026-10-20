@@ -59,7 +59,9 @@
     <div id="marketingMessages" class="marketing-messages"></div>
 
 <!-- Guzik wylogowania w prawym dolnym rogu -->
-<a href="/logout" class="btn btn-danger logout-button">Wyloguj</a>
+<form th:action="@{/logout}" method="post">
+    <button type="submit" class="btn btn-danger logout-button">Wyloguj</button>
+</form>
 
 </div>
 </body>
