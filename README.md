@@ -4,6 +4,35 @@ Big Piig Gastro to sklep internetowy zaprojektowany specjalnie dla branży HoReC
 
 ---
 
+## Logowanie JWT
+
+Formularz `POST /user/login` (pola `username` = e-mail oraz `password`) po
+poprawnej weryfikacji hasła wystawia podpisany JWT HS256 w ciasteczku
+`ACCESS_TOKEN` (HttpOnly, SameSite=Lax) i przekierowuje na `/home`.
+Uwierzytelnienie nie jest zapisywane w sesji; sesja nadal może służyć koszykowi
+i ochronie CSRF. Role i status konta są odczytywane z bazy przy każdym żądaniu.
+Niepoprawny lub wygasły token jest usuwany z przeglądarki.
+
+Przed uruchomieniem ustaw `JWT_SECRET` na losowy sekret zapisany w Base64
+(minimum 32 losowe bajty). Przykład generowania w PowerShell:
+
+```powershell
+$env:JWT_SECRET = [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+```
+
+Zachowaj ten sam sekret między restartami, przechowując go poza repozytorium.
+`JWT_TTL_SECONDS` określa ważność tokenu (domyślnie 3600 sekund).
+Ciasteczko domyślnie wymaga HTTPS. Wyłącznie przy lokalnym uruchomieniu po HTTP
+ustaw `JWT_COOKIE_SECURE=false`.
+
+Formularze POST wymagają tokenu CSRF (Thymeleaf dodaje go przy `th:action`).
+Wylogowanie przez `POST /logout` usuwa ciasteczko i unieważnia sesję.
+Skopiowany JWT pozostaje ważny do wygaśnięcia; nie ma listy unieważnionych tokenów.
+
+Testy logowania, ról, CSRF, podpisu i wygaśnięcia: `mvn -Dtest=JwtSecurityTest test`.
+
+Implementacja korzysta z [obsługi JWT w Spring Security](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html).
+
 ## 🚀 Główne funkcje
 
 - 🛒 **Zarządzanie produktami**: Dodawanie, edycja, usuwanie produktów, przypisywanie do kategorii i producentów.
