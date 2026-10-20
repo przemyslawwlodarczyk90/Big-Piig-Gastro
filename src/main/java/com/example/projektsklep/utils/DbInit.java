@@ -14,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,9 +23,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-@Profile("dev")
 @Component
 public class DbInit {
+
+    @Value("${app.demo-data.enabled:false}")
+    private boolean demoDataEnabled;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -51,8 +54,10 @@ public class DbInit {
 
         Role adminRole = Role.fromAdminOrUser(AdminOrUser.ADMIN);
         Role userRole = Role.fromAdminOrUser(AdminOrUser.USER);
-        Role savedAdminRole = roleRepository.save(adminRole);
-        Role savedUserRole = roleRepository.save(userRole);
+        Role savedAdminRole = roleRepository.findByRoleType(AdminOrUser.ADMIN).orElseGet(() -> roleRepository.save(adminRole));
+        Role savedUserRole = roleRepository.findByRoleType(AdminOrUser.USER).orElseGet(() -> roleRepository.save(userRole));
+
+        if (!demoDataEnabled || userRepository.count() > 0) return;
 
 
         User user = User.builder()

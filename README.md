@@ -78,7 +78,7 @@ Testy zapewniają niezawodność i wysoką jakość działania systemu.
 
 ### Wymagania
 
-- Java 11+
+- Java 17+
 - Maven
 - PostgreSQL
 
@@ -92,6 +92,25 @@ Testy zapewniają niezawodność i wysoką jakość działania systemu.
 6. 🏠 Wejdź na: [http://localhost:8080](http://localhost:8080)
 
 ---
+
+## Dane i testy regresji
+
+Schemat bazy jest aktualizowany (`ddl-auto=update`); zamkniecie aplikacji nie usuwa
+zamowien ani kont. To ustawienie dla projektu lokalnego, bez wersjonowanych migracji.
+Role USER i ADMIN sa inicjalizowane, jesli nie istnieja. Konta i produkty demonstracyjne
+sa domyslnie wylaczone. `DEMO_DATA_ENABLED=true` wlacza ich dodanie tylko do bazy bez
+uzytkownikow. Konta demo maja publicznie znane hasla z kodu inicjalizatora.
+
+Koszyk jest przechowywany w sesji przegladarki. Po wygasnieciu sesji lub restarcie
+aplikacji nie jest odtwarzany z bazy. Zlozone zamowienia sa zapisywane w bazie wraz
+z pozycjami, aktualnymi cenami produktow i kopia adresu dostawy. Po bledzie zapisu
+zawartosc koszyka pozostaje dostepna. Puste zamowienia sa odrzucane.
+
+Testy regresji bez Dockera (zapis zamowienia sprawdzany na testowej bazie H2):
+
+```shell
+mvn -Dtest=CheckoutPersistenceTest,BasketFailureTest,CheckoutControllerTest,BasketTest,JwtSecurityTest,RegistrationSecurityTest,RegistrationIdentityTest,DbInitTest test
+```
 
 ## 📄 Licencja
 
