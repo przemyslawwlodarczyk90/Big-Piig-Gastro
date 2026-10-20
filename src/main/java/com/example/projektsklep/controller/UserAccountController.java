@@ -1,6 +1,7 @@
 package com.example.projektsklep.controller;
 
 import com.example.projektsklep.model.dto.OrderDTO;
+import com.example.projektsklep.model.dto.AddressDTO;
 import com.example.projektsklep.model.dto.UserDTO;
 import com.example.projektsklep.service.BasketService;
 import com.example.projektsklep.service.OrderService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -53,6 +55,16 @@ public class UserAccountController {
 
 
     @Operation(summary = "Pokazuje formularz edycji użytkownika")
+    @GetMapping("/orders/{orderId}")
+    public String ownOrder(@PathVariable Long orderId, Model model, Authentication authentication) {
+        Long userId = userService.findUserByEmail(authentication.getName()).orElseThrow().id();
+        var order = orderService.findOrderDTOById(orderId).filter(value -> userId.equals(value.userId()))
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND));
+        model.addAttribute("order", order);
+        return "order_details";
+    }
+
     @GetMapping("/edit")
     public String showEditForm(Model model, Authentication authentication) {
         String email = authentication.getName();
@@ -97,13 +109,21 @@ public class UserAccountController {
 
     @Operation(summary = "Przetwarza realizację zamówienia")
     @PostMapping("/checkoutBasket")
-    public String processCheckout(@Valid @ModelAttribute("order") OrderDTO orderDTO, BindingResult result
-    ) {
-        if (result.hasErrors()) {
-            return "order_checkout_form";
+    public String processCheckout(Authentication authentication,
+            @RequestParam(defaultValue = "false") boolean differentAddress,
+            @RequestParam(name = "shippingAddress.street", defaultValue = "") String street,
+            @RequestParam(name = "shippingAddress.city", defaultValue = "") String city,
+            @RequestParam(name = "shippingAddress.postalCode", defaultValue = "") String postalCode,
+            @RequestParam(name = "shippingAddress.country", defaultValue = "") String country,
+            RedirectAttributes redirect) {
+        Long userId = userService.findUserByEmail(authentication.getName()).orElseThrow().id();
+        try {
+            return basketService.finalizeOrderAndRedirect(userId,
+                    new AddressDTO(null, street, city, postalCode, country), differentAddress);
+        } catch (IllegalArgumentException ex) {
+            redirect.addFlashAttribute("checkoutError", ex.getMessage());
+            return "redirect:/account/checkoutBasket";
         }
-
-        return "order_success";
     }
 
 
@@ -111,7 +131,7 @@ public class UserAccountController {
     @PostMapping("/updateProductQuantity/{productId}")
     public String updateProductQuantity(@PathVariable Long productId, @RequestParam("quantity") int quantity) {
         basketService.updateProductQuantity(productId, quantity);
-        return "redirect:/basket";
+        return "redirect:/account/basket";
     }
 
     @Operation(summary = "Pokazuje stronę sukcesu zamówienia")

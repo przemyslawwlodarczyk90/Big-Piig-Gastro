@@ -24,7 +24,7 @@
     </thead>
     <tbody>
     <tr th:each="line : ${order.lineOfOrders}">
-        <td th:text="${line.product.title}"></td>
+        <td><a th:href="@{/api/productDetails/{id}(id=${line.productId})}" th:text="${'Produkt #' + line.productId}"></a></td>
         <td th:text="${line.quantity}"></td>
         <td th:text="${line.unitPrice}"></td>
     </tr>

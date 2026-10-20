@@ -28,7 +28,7 @@
                 <td th:text="${order.dateCreated}"></td>
                 <td th:text="${order.sentAt}"></td>
                 <td th:text="${order.totalPrice}"></td>
-                <td><a th:href="@{/orders/{orderId}(orderId=${order.id})}" class="btn btn-primary btn-sm">Szczegóły</a></td>
+                <td><a th:href="@{/account/orders/{orderId}(orderId=${order.id})}" class="btn btn-primary btn-sm">Szczegóły</a></td>
             </tr>
             </tbody>
         </table>

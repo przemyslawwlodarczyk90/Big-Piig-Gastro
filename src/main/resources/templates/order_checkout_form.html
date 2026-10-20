@@ -26,6 +26,7 @@
 </head>
 <body>
 <h1>Finalizacja zamówienia</h1>
+<p th:if="${checkoutError}" th:text="${checkoutError}" class="alert alert-danger"></p>
 <form th:action="@{/account/checkoutBasket}" th:object="${order}" method="post">
     <div>
         <input type="checkbox" id="differentAddress" name="differentAddress" onchange="toggleAddressForm()">

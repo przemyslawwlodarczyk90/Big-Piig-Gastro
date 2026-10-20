@@ -36,8 +36,7 @@ public class BasketController {
             redirectAttributes.addFlashAttribute("errorMessage", "Nie udało się dodać produktu do koszyka: " + e.getMessage());
         }
 
-        String referer = request.getHeader("Referer");
-        return "redirect:" + referer;
+        return "redirect:/account/basket";
     }
 
 }

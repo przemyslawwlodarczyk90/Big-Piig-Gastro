@@ -11,6 +11,10 @@
         <li th:each="item : ${basket.lineOfOrders}" th:id="${'product-' + item.product.id}">
             <span th:text="${item.product.title}">Nazwa produktu</span> -
             <span th:text="${item.quantity}">Ilość</span>
+            <form th:action="@{/account/updateProductQuantity/{id}(id=${item.product.id})}" method="post">
+                <input type="number" name="quantity" min="0" th:value="${item.quantity}">
+                <button type="submit">Zmien ilosc (0 usuwa)</button>
+            </form>
         </li>
     </ul>
     <a href="/account/checkoutBasket" class="btn btn-primary">Przejdź do kasy</a>

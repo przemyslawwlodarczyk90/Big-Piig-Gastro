@@ -22,11 +22,12 @@ public class Basket {
     }
 
     public void addProduct(Product product, int quantity) {
+        if (quantity <= 0) throw new IllegalArgumentException("Ilosc musi byc dodatnia");
         LineOfOrder lineOfOrder = findLineByProduct(product);
         if (lineOfOrder == null) {
             lineOfOrders.add(new LineOfOrder(product, quantity));
         } else {
-            lineOfOrder.setQuantity(lineOfOrder.getQuantity() + quantity);
+            lineOfOrder.setQuantity(Math.addExact(lineOfOrder.getQuantity(), quantity));
         }
     }
 
@@ -43,7 +44,8 @@ public class Basket {
 
     private LineOfOrder findLineByProduct(Product product) {
         return lineOfOrders.stream()
-                .filter(line -> line.getProduct().equals(product))
+                .filter(line -> line.getProduct() == product || (product.getId() != null
+                        && product.getId().equals(line.getProduct().getId())))
                 .findFirst()
                 .orElse(null);
     }
