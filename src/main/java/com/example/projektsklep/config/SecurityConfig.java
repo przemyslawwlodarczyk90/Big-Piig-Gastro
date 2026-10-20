@@ -47,7 +47,10 @@ public class SecurityConfig {
                 .requestCache(cache -> cache.disable())
                 .addFilterBefore(new JwtCookieFilter(tokens, userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/admin/**", "/swagger-ui/index.html#/**").hasAuthority("ADMIN")
+                        .requestMatchers("/users/new", "/users/registrationSuccess").permitAll()
+                        .requestMatchers("/orders/create").hasAuthority("USER")
+                        .requestMatchers("/admin/**", "/orders/**", "/orders", "/users/**", "/users",
+                                "/swagger-ui/**", "/v3/api-docs/**").hasAuthority("ADMIN")
                         .requestMatchers("/account/**").hasAuthority("USER")
                         .requestMatchers("/**").permitAll())
                 .formLogin((form) -> form

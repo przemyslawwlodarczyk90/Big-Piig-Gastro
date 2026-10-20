@@ -53,7 +53,6 @@ public class OrderController {
 
 
     @Operation(summary = "Szczegóły zamówienia")
-    @ExceptionHandler(OrderNotFoundException.class)
     @GetMapping("/{orderId}")
     public String orderDetails(@PathVariable Long orderId, Model model) {
 

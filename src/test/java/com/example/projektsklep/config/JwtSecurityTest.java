@@ -29,7 +29,7 @@ class JwtSecurityTest {
 
     @RestController
     static class Probe {
-        @GetMapping({"/account/test", "/admin/test"})
+        @GetMapping({"/account/test", "/admin/test", "/orders", "/users", "/swagger-ui/index.html"})
         String account(java.security.Principal principal) { return principal.getName(); }
     }
 
@@ -53,6 +53,18 @@ class JwtSecurityTest {
         mvc.perform(get("/admin/test").cookie(cookie)).andExpect(status().isForbidden());
         mvc.perform(post("/logout").cookie(cookie).with(csrf()))
                 .andExpect(redirectedUrl("/home")).andExpect(cookie().maxAge(JwtTokens.COOKIE, 0));
+    }
+
+    @Test
+    void privateListingsAreUnavailableToGuestsAndOrdinaryUsers() throws Exception {
+        user();
+        var result = mvc.perform(post("/user/login").with(csrf())
+                        .param("username", "user@example.com").param("password", "password")).andReturn();
+        for (String path : java.util.List.of("/orders", "/users", "/swagger-ui/index.html")) {
+            mvc.perform(get(path)).andExpect(status().is3xxRedirection());
+            mvc.perform(get(path).cookie(result.getResponse().getCookie(JwtTokens.COOKIE)))
+                    .andExpect(status().isForbidden());
+        }
     }
 
     @Test

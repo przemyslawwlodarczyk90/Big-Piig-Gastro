@@ -57,10 +57,12 @@ public class UserService {
 
         if (addressDTO != null) {
             address = addressService.convertToEntity(addressDTO);
+            address.setId(null);
             address = addressRepository.save(address);
         }
 
         User user = convertToUser(userDTO);
+        user.setId(null);
 
 
         if (address != null) {
@@ -158,7 +160,7 @@ public class UserService {
 
 
     public UserDTO initializeNewUserDTO() {
-        AddressDTO addressDTO = new AddressDTO(0L, "", "", "", "");
+        AddressDTO addressDTO = new AddressDTO(null, "", "", "", "");
         return UserDTO.builder()
                 .id(null)
                 .firstName("")

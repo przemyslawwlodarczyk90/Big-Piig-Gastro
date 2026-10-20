@@ -53,16 +53,13 @@ public class UserListingAndRegistringController {
     @Operation(summary = "Rejestracja użytkownika")
     @PostMapping("/new")
     public String registerUser(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
-                               BindingResult result, Model model,
-                               @RequestParam("roleType") String roleTypeStr) {
+                               BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "user_register";
         }
 
-        AdminOrUser roleType = AdminOrUser.valueOf(roleTypeStr.toUpperCase());
-
         try {
-            userService.saveUser(userDTO, userDTO.address(), roleType);
+            userService.saveUser(userDTO, userDTO.address(), AdminOrUser.USER);
         } catch (Exception e) {
             model.addAttribute("registrationError", "Nie udało się zarejestrować użytkownika: " + e.getMessage());
             return "user_register";
