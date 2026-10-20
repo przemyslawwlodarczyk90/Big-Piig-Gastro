@@ -129,8 +129,13 @@ public class UserAccountController {
 
     @Operation(summary = "Aktualizuje ilość produktu w koszyku")
     @PostMapping("/updateProductQuantity/{productId}")
-    public String updateProductQuantity(@PathVariable Long productId, @RequestParam("quantity") int quantity) {
-        basketService.updateProductQuantity(productId, quantity);
+    public String updateProductQuantity(@PathVariable Long productId, @RequestParam("quantity") int quantity,
+                                        RedirectAttributes redirect) {
+        try {
+            basketService.updateProductQuantity(productId, quantity);
+        } catch (IllegalArgumentException ex) {
+            redirect.addFlashAttribute("errorMessage", ex.getMessage());
+        }
         return "redirect:/account/basket";
     }
 

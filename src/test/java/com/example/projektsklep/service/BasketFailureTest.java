@@ -15,6 +15,7 @@ class BasketFailureTest {
         var checkout = mock(OrderCheckoutService.class);
         var product = new Product("Oven", BigDecimal.TEN);
         product.setId(1L);
+        product.setStockQuantity(10);
         when(products.findById(1L)).thenReturn(Optional.of(product));
         var basket = new BasketService(products, checkout);
         basket.addProductToBasket(1L, 2);

@@ -42,6 +42,7 @@ public class ProductService {
                 .orElse(null);
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public ProductDTO saveProductDTO(ProductDTO productDTO) {
         Product product = convertToProduct(productDTO);
         Product savedProduct = productRepository.save(product);
@@ -58,13 +59,15 @@ public class ProductService {
                 .miniature(product.getMiniature())
                 .price(product.getPrice())
                 .productType(product.getProductType())
+                .quantity(product.availableStock(java.time.Instant.now()))
                 .authorId(product.getAuthor() != null ? product.getAuthor().getId() : null)
                 .categoryId(product.getCategory() != null ? product.getCategory().getId() : null)
                 .build();
     }
 
     private Product convertToProduct(ProductDTO productDTO) {
-        Product product = new Product();
+        Product product = productDTO.id() == null ? new Product() : productRepository.findById(productDTO.id())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono produktu"));
         product.setId(productDTO.id());
         product.setTitle(productDTO.title());
         product.setDescription(productDTO.description());
@@ -110,7 +113,7 @@ public class ProductService {
 
     public ProductDTO createDefaultProductDTO() {
 
-        Long id = 1L;
+        Long id = null;
         String title = "Nazwa";
         String description = "Opis";
         String miniature = "Miniatura";

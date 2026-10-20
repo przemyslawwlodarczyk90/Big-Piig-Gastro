@@ -14,7 +14,11 @@
     <p><strong>Typ:</strong> <span th:text="${product.productType}">Typ produktu</span></p>
     <p><strong>Miniatura:</strong> <img th:src="@{${product.miniature}}" alt="Miniatura produktu" class="img-thumbnail" /></p>
     <div sec:authorize="hasAuthority('USER')">
-        <button class="btn btn-primary" onclick="location.href='/add-to-cart/'  ${product.id}">Kup</button>
+        <p th:text="${product.quantity == 0 ? 'Chwilowo niedostepny' : 'Dostepne sztuki: ' + product.quantity}"></p>
+        <form th:action="@{/basket/add/{id}(id=${product.id})}" method="post">
+            <input type="number" name="quantity" min="1" th:max="${product.quantity}" value="1">
+            <button type="submit" class="btn btn-primary" th:disabled="${product.quantity == 0}">Dodaj do koszyka</button>
+        </form>
     </div>
     <a href="/api/productList" class="btn btn-primary btn-home">  Powrót   </a>
 </div>

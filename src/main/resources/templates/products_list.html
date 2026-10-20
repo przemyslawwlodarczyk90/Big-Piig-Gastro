@@ -9,7 +9,7 @@
     <h1>Lista Produktów</h1>
     <ul class="list-group mb-3">
         <li class="list-group-item" th:each="product : ${productsPage.content}">
-            <h2 th:text="${product.title}">Tytuł Produktu</h2>
+            <p th:text="${product.quantity == null or product.quantity == 0 ? 'Chwilowo niedostepny' : 'Dostepne sztuki: ' + product.quantity}"></p><h2 th:text="${product.title}">Tytuł Produktu</h2>
             <p><strong>Cena:</strong> <span th:text="${product.price}">Cena</span></p>
             <p><strong>Typ:</strong> <span th:text="${product.productType}">Typ Produktu</span></p>
             <div>
@@ -17,7 +17,7 @@
                 <div sec:authorize="hasAuthority('USER')">
                     <form th:action="@{/basket/add/{productId}(productId=${product.id})}" method="post">
                         <input type="hidden" name="quantity" value="1"/>
-                        <button type="submit" class="btn btn-success">Dodaj do koszyka</button>
+                        <button type="submit" th:disabled="${product.quantity == null or product.quantity == 0}" class="btn btn-success">Dodaj do koszyka</button>
                     </form>
                 </div>
             </div>

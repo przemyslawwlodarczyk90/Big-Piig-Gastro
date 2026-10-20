@@ -24,6 +24,10 @@ class RoleTest {
         Role role1 = Role.fromAdminOrUser(AdminOrUser.USER);
         Role role2 = Role.fromAdminOrUser(AdminOrUser.USER);
 
+        // Dwie instancje tej samej zapisanej roli sa rowne.
+        role1.setId(1);
+        role2.setId(1);
+
         boolean isEqual = role1.equals(role2);
 
         Assertions.assertTrue(isEqual);
@@ -53,16 +57,16 @@ class RoleTest {
     }
 
     @Test
-    void testHashCode_WithDifferentRoles_ShouldReturnDifferentHashCodes() {
+    void hashCodeRemainsStableWhenRoleGetsItsId() {
 
         Role role1 = Role.fromAdminOrUser(AdminOrUser.USER);
-        Role role2 = Role.fromAdminOrUser(AdminOrUser.ADMIN);
-
-        int hashCode1 = role1.hashCode();
-        int hashCode2 = role2.hashCode();
-
-
-        Assertions.assertNotEquals(hashCode1, hashCode2);
+        // Nadanie ID nie psuje przynaleznosci do zbioru rol.
+        var roles = new java.util.HashSet<Role>();
+        roles.add(role1);
+        int original = role1.hashCode();
+        role1.setId(1);
+        Assertions.assertEquals(original, role1.hashCode());
+        Assertions.assertTrue(roles.contains(role1));
     }
 
     @Test

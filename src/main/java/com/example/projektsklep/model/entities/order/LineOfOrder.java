@@ -16,6 +16,14 @@ import java.math.BigDecimal;
 @Table(name = "line_of_orders")
 public class LineOfOrder {
 
+    @Override
+    public boolean equals(Object other) {
+        return this == other || other instanceof LineOfOrder line && getId() != null && getId().equals(line.getId());
+    }
+
+    @Override
+    public int hashCode() { return LineOfOrder.class.hashCode(); }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

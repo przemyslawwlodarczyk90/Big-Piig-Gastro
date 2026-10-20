@@ -60,7 +60,10 @@ class UserTest {
 
     @Test
     void testEqualsWithEqualUsers() {
+        // Dwie instancje tego samego zapisanego konta sa rowne.
         User anotherZenek = new User("zenek@example.com", "hashedPasswordZenek", "avatarZenek.png", "Zenek", "Zenkowski");
+        userZenek.setId(1L);
+        anotherZenek.setId(1L);
 
         assertEquals(userZenek, anotherZenek);
     }
@@ -78,8 +81,16 @@ class UserTest {
     }
 
     @Test
-    void testHashCodeWithDifferentUsers() {
-        assertNotEquals(userZenek.hashCode(), userZbyszek.hashCode());
+    void hashCodeRemainsStableAfterPersistenceAndProfileEdit() {
+        // Hash nie zmienia sie po nadaniu ID ani zmianie profilu.
+        int original = userZenek.hashCode();
+        var set = new java.util.HashSet<User>();
+        set.add(userZenek);
+        userZenek.setId(1L);
+        userZenek.setFirstName("Changed");
+        userZenek.addOrder(new Order());
+        assertEquals(original, userZenek.hashCode());
+        assertTrue(set.contains(userZenek));
     }
 
     @Test

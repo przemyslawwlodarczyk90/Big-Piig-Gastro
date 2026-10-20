@@ -28,6 +28,9 @@ public class BasketService {
         if (quantity <= 0) throw new IllegalArgumentException("Ilosc musi byc dodatnia");
         Product product = products.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono produktu: " + productId));
+        int current = basket.getLineOfOrders().stream().filter(line -> productId.equals(line.getProduct().getId()))
+                .mapToInt(line -> line.getQuantity()).sum();
+        checkStock(product, Math.addExact(current, quantity));
         basket.addProduct(product, quantity);
     }
 
@@ -43,6 +46,7 @@ public class BasketService {
         if (quantity == 0) {
             basket.getLineOfOrders().removeIf(line -> line.getProduct().getId().equals(productId));
         } else {
+            checkStock(products.findById(productId).orElseThrow(), quantity);
             basket.getLineOfOrders().stream().filter(line -> line.getProduct().getId().equals(productId))
                     .findFirst().ifPresent(line -> line.setQuantity(quantity));
         }
@@ -72,5 +76,11 @@ public class BasketService {
         checkout.placeOrder(userId, basket.getLineOfOrders(), differentAddress ? address : null);
         clear();
         return "redirect:/account/orderSuccess";
+    }
+
+    private void checkStock(Product product, int quantity) {
+        if (product.availableStock(java.time.Instant.now()) < quantity) {
+            throw new IllegalArgumentException("Za malo sztuk produktu: " + product.getTitle());
+        }
     }
 }

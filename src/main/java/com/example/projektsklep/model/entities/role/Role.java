@@ -15,6 +15,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Role {
+    @Override
+    public boolean equals(Object other) {
+        return this == other || other instanceof Role role && getId() != null && getId().equals(role.getId());
+    }
+
+    @Override
+    public int hashCode() { return Role.class.hashCode(); }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

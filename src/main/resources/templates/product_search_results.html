@@ -13,6 +13,7 @@
         <tr>
             <th>Tytuł</th>
             <th>Cena</th>
+            <th>Dostepnosc</th>
             <th>Akcje</th>
         </tr>
         </thead>
@@ -20,11 +21,12 @@
         <tr th:each="product : ${productsPage.content}">
             <td th:text="${product.title}"></td>
             <td th:text="${product.price}"></td>
+            <td th:text="${product.quantity == null or product.quantity == 0 ? 'Chwilowo niedostepny' : product.quantity + ' szt.'}"></td>
             <td>
                 <a th:href="@{/api/productDetails/{productId}(productId=${product.id})}" class="btn btn-info">Szczegóły</a>
                 <form th:action="@{/basket/add/{productId}(productId=${product.id})}" method="post">
                         <input type="hidden" name="quantity" value="1"/>
-                    <div sec:authorize="hasAuthority('USER')">   <button type="submit" class="btn btn-success">Dodaj do koszyka</button></div>
+                    <div sec:authorize="hasAuthority('USER')">   <button type="submit" th:disabled="${product.quantity == null or product.quantity == 0}" class="btn btn-success">Dodaj do koszyka</button></div>
                     </form>
             </td>
         </tr>

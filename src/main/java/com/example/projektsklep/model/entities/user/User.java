@@ -23,6 +23,14 @@ import java.util.Set;
 @Table(name = "user_id")
 public class User {
 
+    @Override
+    public boolean equals(Object other) {
+        return this == other || other instanceof User user && getId() != null && getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() { return User.class.hashCode(); }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

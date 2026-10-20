@@ -25,6 +25,14 @@ import java.util.List;
 @Table(name = "orders")
 public class Order implements Observable {
 
+    @Override
+    public boolean equals(Object other) {
+        return this == other || other instanceof Order order && getId() != null && getId().equals(order.getId());
+    }
+
+    @Override
+    public int hashCode() { return Order.class.hashCode(); }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -4,19 +4,19 @@ import com.example.projektsklep.model.entities.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.junit.jupiter.Testcontainers;
+
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Testcontainers
+@DataJpaTest
+
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+
  class UserRepositoryIntegrationTest {
 
     @Autowired
@@ -89,7 +89,7 @@ import static org.junit.jupiter.api.Assertions.*;
     @Test
      void testUpdateUserDetails() {
 
-        Long userId = 2L;
+        Long userId = userRepository.findByEmail("annanowak@example.com").orElseThrow().getId();
         User user = userRepository.findById(userId).orElseThrow(() -> new AssertionError("The user should exist."));
         user.setFirstName("AnnaUpdated");
         userRepository.save(user);

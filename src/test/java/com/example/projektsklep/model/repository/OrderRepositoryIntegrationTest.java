@@ -6,35 +6,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+
+
+
+
+
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@Testcontainers
-@SpringBootTest
+
+@DataJpaTest
 public class OrderRepositoryIntegrationTest {
-
-    @Container
-    public static PostgreSQLContainer container = new PostgreSQLContainer("postgres:14-alpine")
-            .withUsername("user")
-            .withPassword("password")
-            .withDatabaseName("pgDB");
-
-
-    @DynamicPropertySource
-    static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", container::getJdbcUrl);
-        registry.add("spring.datasource.password", container::getPassword);
-        registry.add("spring.datasource.username", container::getUsername);
-    }
 
     @Autowired
     private OrderRepository orderRepository;
